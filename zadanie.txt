@@ -1,0 +1,117 @@
+Zadanie 7: Webová aplikácia „Správa školských testov a otázok“
+
+Cieľ projektu
+
+Vytvorte webovú aplikáciu na tvorbu a správu testov, otázok a výsledkov žiakov.
+
+Backend musí byť vytvorený v Django.
+Frontend je ľubovoľný.
+
+Aplikácia musí byť na konci projektu nasadená online na free platforme.
+
+Opis aplikácie
+
+Učiteľ potrebuje systém, v ktorom bude možné:
+
+- vytvárať testy
+- pridávať otázky do testov
+- spúšťať test pre používateľov
+- evidovať odpovede a výsledky
+- zobrazovať prehľad úspešnosti
+
+Povinné modely
+
+1. Test
+- názov
+- popis
+- predmet
+- časový limit
+- publikovaný / nepublikovaný
+
+2. Question
+- text otázky
+- typ otázky
+- počet bodov
+
+3. Answer
+- text odpovede
+- správna / nesprávna
+- otázka
+
+4. Result
+- používateľ
+- test
+- získané body
+- percentá
+- dátum vyplnenia
+
+Povinný M:N vzťah
+
+Povinné riešenie:
+Test ↔ Question
+
+Jeden test môže obsahovať viac otázok a jedna otázka môže byť použitá vo viacerých testoch.
+
+Odporúčané riešenie cez model TestQuestion
+- test
+- otázka
+- poradie
+- počet bodov v konkrétnom teste
+
+Povinné funkcionality
+
+CRUD operácie
+
+Minimálne pre:
+- Test
+- Question
+- Answer
+
+Práca s testami
+- vytvoriť test
+- pridať otázky do testu
+- vyplniť test
+- vyhodnotiť test
+- zobraziť výsledky používateľa
+
+Vyhľadávanie a filtrovanie
+- podľa predmetu
+- podľa publikácie
+- podľa používateľa
+- podľa dátumu
+
+Prihlásenie používateľa
+
+Minimálne 2 roly:
+- učiteľ / admin
+- študent
+
+API alebo frontend
+- Django templates + jednoduché API
+alebo
+- oddelený frontend + REST API
+
+Povinné nasadenie
+
+Projekt musí byť nasadený online na free platforme.
+
+Povinné odovzdanie
+- Git repozitár
+- odkaz na aplikáciu
+- README
+- stručná dokumentácia
+- prezentácia
+
+Spoločné požiadavky pre všetky zadania
+
+Každý projekt musí obsahovať:
+- backend v Django
+- databázové modely a migrácie
+- aspoň jeden vzťah M:N
+- CRUD operácie nad hlavnými entitami
+- autentifikáciu používateľa
+- minimálne 2 používateľské roly
+- filtrovanie alebo vyhľadávanie
+- Git repozitár
+- README
+- nasadenie na free platforme

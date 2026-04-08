@@ -1,0 +1,59 @@
+nazov webu - test-web
+nazov apky - quiz
+admin heslo - 
+
+osoba A - Sabi
+osoba B - Peta
+
+1. Týždeň: Základy a Databáza (Modelovanie)
+Cieľom je mať funkčný backendový základ, kde sa dajú v admin rozhraní "naklikať" prvé dáta.
+
+Spoločne (prvých 30 min): Inicializácia Git repozitára, vytvorenie Django projektu a nastavenie virtuálneho prostredia.
+
+Študent A (Backendista): Definícia modelov Test, Question, Answer a prepojovacieho modelu TestQuestion. Spustenie migrácií.
+
+Študent B (Frontend/Admin): Registrácia modelov do admin.py, aby ste si mohli overiť, že vzťahy (hlavne M:N) fungujú. Príprava základného HTML layoutu (base.template).
+
+Checkpoint: V Django admine viete vytvoriť test a priradiť mu otázky.
+
+2. Týždeň: Autentifikácia a CRUD (Učiteľská časť)
+Učiteľ potrebuje vedieť spravovať databázu otázok a testov cez web, nie cez admina.
+
+Študent A: Nastavenie Login/Logout systému a rozlíšenie rolí (Učiteľ vs. Študent) – stačí cez is_staff alebo skupiny.
+
+Študent B: Tvorba pohľadov (Views) a formulárov pre CRUD operácie (Vytvoriť/Upraviť test a otázky).
+
+Spoločne: Ošetrenie prístupov (študent nesmie vidieť editačné formuláre učiteľa).
+
+Checkpoint: Prihlásený učiteľ dokáže cez webovú aplikáciu vytvoriť nový test.
+
+3. Týždeň: Logika Testovania (Jadro aplikácie)
+Najťažšia časť – ako zobraziť test študentovi a ako ho vyhodnotiť.
+
+Študent A: Logika vyhodnocovania – POST request z testu prebehne cyklom cez odpovede, porovná ich a vypočíta body/percentá. Uloženie do modelu Result.
+
+Študent B: Šablóna (Template) pre samotný test – zobrazenie otázok a možností (radio buttony/checkboxy) a časomiera (JavaScript).
+
+Checkpoint: Študent vie kliknúť na "Spustiť test", vybrať odpovede a po odoslaní sa mu zobrazí výsledok.
+
+4. Týždeň: Filtrovanie, Prehľady a UI
+Dolaďovanie funkcionalít a vizuál.
+
+Študent A: Implementácia filtrovania (podľa predmetu, dátumu, používateľa). Použite django-filter alebo jednoduché request.GET.
+
+Študent B: Dashboard pre študenta (moje výsledky) a pre učiteľa (celkový prehľad úspešnosti všetkých žiakov – tabuľky).
+
+Spoločne: Základný CSS styling (odporúčam Bootstrap alebo Tailwind, nech to vyzerá k svetu bez veľkej námahy).
+
+Checkpoint: Vyhľadávanie v testoch funguje a výsledky sú prehľadne zobrazené.
+
+5. Týždeň: Nasadenie a Dokumentácia
+Tento týždeň býva kritický kvôli technickým problémom pri hostingu. + dokoncovanie vsetkeho co sme nestihli (hlavne ak nastali komplkacie)
+
+Študent A: Nasadenie (Deployment) na free platformu (napr. Railway.app, Render.com alebo PythonAnywhere). Nastavenie databázy a statických súborov (WhiteNoise).
+
+Študent B: Tvorba README.md, dokumentácie a príprava prezentácie.
+
+Spoločne: Finálne testovanie (bug hunting) priamo na produkčnom serveri.
+
+Checkpoint: Projekt je online, odkaz funguje a dokumentácia je v Gite.

@@ -1,0 +1,141 @@
+
+1.
+Instalacia django do python: 
+pip list(ake kniznice mame cez pip nainstalovane d pythonu)
+pip install django(stiahne djago)
+
+2.
+Vytvorenie django projektu
+django-admin startproject [nazov projektu] .
+(treba davat na koniec prikazu aj bodku, ^vytvorenie projektu)
+
+3. 
+nastavenie jazyku/casu (web-settings.py)
+LANGUAGE_CODE = 'sk'
+TIME_ZONE = 'Europe/Bratislava'
+
+4.
+spustenie vyvojoveho servera
+python manage.py runserver 
+
+5.
+vytvorenie aplikacie
+python manage.py startapp [meno aplikacie]
+
+6.
+zaregistrovanie aplikacie do projektu(web-settings.py)
+INSTALLED_APPS = [
+    'django.contrib.admin',
+     ...
+    '[nazov aplikacie]',
+]
+
+7.
+vytvorenie jednoducheho views (apka-views.py)
+```
+from django.shortcuts import render, HttpResponse
+
+def index(request):
+    return HttpResponse('Hello World!')
+```
+
+8.vytvorenie urlpattern:
+8.1 mySite/urls.py
+```
+from django.urls import path, include 
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('skuska/', include('skuska.urls')), 
+]```
+
+8.2
+vytvvorenie suboru urls.py v riecinku aplikecie
+upravit urls.py
+```
+from django.urls import path
+from . import views
+
+
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+```
+
+9. Template
+9.1
+- Vytvoriť v priečinku aplikácie priečinok templates/nazov_aplikacie
+- v tomto priečinku vytvoriť html súbor (napr. index.html)
+9.2 upraviť views tak, aby používal template
+from django.shortcuts import render
+
+def index(request):
+    sucet = 10+5
+    return render(request, "kalkulacka/index.html", {"vysledok":vysledok})
+
+def index(request):
+    sucet=10+5
+    sucin=10*5
+    apar="A je vacsie"
+    'kalkulacka/index.html', {"sucet":sucet, "sucin":sucin, "apar":apar}
+    
+10 css, obrazky
+- Vytvoriť v priečinku aplikácie priečinok static/nazov_aplikacie
+- v tomto priecinku vytvorit css (napr. kalkulacka.css)
+- do tohto priecinku nakopirovat obrazky
+- do teplate (index.html) doplnit:
+    -uplne na zaciatok ``` {% load static %} ```
+    -do hlavicky odkas na styl
+    <head>
+        <link rel="stylesheet" href="{% static 'kalkulacka/kalkulacka.css' %}">
+    </head>
+-obrazok vlozit:
+    <img src={% static 'kalkulacka/calc.png' %}>
+
+11. Modely (models.py)
+
+```
+class Osoba(web/models.Model):
+    meno = models.CharField(max_length=100)
+    priezvisko = models.CharField(max_length=100)
+    vek = models.IntegerField()
+    datum = models.DateField()
+    email = models.EmailField()
+    muz = models.BooleanField()
+
+    def __str__(self):
+        return f"{self.meno} {self.priezvisko}"
+    
+```
+
+12. vytvorenie struktury databazy podla modelov:
+python manage.py makemigrations
+python manage.py migrate
+
+databaza sa defaultne vytvara v subore db.sqlite3
+
+13. vytvorenie prveho uzivatela do admin rozhrania
+python manage.py createsuperuser
+
+14.zahrnute aplikacie do admin panela (web/admin.py)
+```
+from django.contrib import admin
+from .models import Osoba
+
+admin.site.register(Osoba)
+```
+heslo - cisco
+
+python prvy/manage.py startapp skola
+
+nastavenie pluralu a podla coho sa maju itemy zoradzovat
+```
+    class Meta:
+        verbose_name = "Ucitel"
+        verbose_name_plural = "Ucitelia"
+        ordering = ["priezvisko"]
+```
+
+15
+skola/viewn.py
+```
