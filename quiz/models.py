@@ -11,6 +11,9 @@ class User(models.Model):
     vek = models.PositiveIntegerField(null=True, blank=True)
     is_teacher = models.BooleanField(default=False)
 
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email'] # To, čo sa pýta pri createsuperuser okrem mena a hesla
+
     def __str__(self):
         return f"{self.username} ({'Učiteľ' if self.is_teacher else 'Študent'})"
     
@@ -43,7 +46,7 @@ class Test(models.Model):
     time_limit = models.IntegerField(help_text="Limit v minútach")
     is_published = models.BooleanField(default=False)
 
-    questions = models.ManyToManyField(Question, evangelical='tests', through='TestQuestion')
+    questions = models.ManyToManyField(Question, related_name='tests', through='TestQuestion')
 
     def __str__(self):
         return self.title

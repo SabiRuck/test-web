@@ -1,6 +1,8 @@
 nazov webu - test-web
 nazov apky - quiz
-admin heslo - 
+admin heslo - admin
+admin meno - admin
+admin email - admin@admin.sk
 
 osoba A - Sabi
 osoba B - Peta

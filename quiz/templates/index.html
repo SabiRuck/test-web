@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Školské testy{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'quiz/style.css' %}">
+</head>
+<body>
+
+    <nav>
+        <a href="/">Domov</a>
+        <a href="/admin/">Administrácia</a>
+    </nav>
+
+    <div class="content">
+        {% block content %}
+        <h1>Vitajte v aplikácii Quiz</h1>
+        <p>Toto je základná šablóna bez externých knižníc.</p>
+        {% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; 2026 - Systém pre správu testov</p>
+    </footer>
+
+</body>
+</html>

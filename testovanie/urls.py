@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from quiz.views import domov_view  
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', domov_view, name='domov'),  # nahradí raketu tvojím webom
 ]
