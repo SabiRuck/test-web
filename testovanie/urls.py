@@ -14,11 +14,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path
-from quiz.views import domov_view  
+from quiz import views
+from django.contrib.auth import views as auth_views
+from django.contrib import admin
 
 urlpatterns = [
+    path('', views.index, name='index'),
+    # Django má hotové views na login a logout
+    path('login/', auth_views.LoginView.as_view(template_name='quiz/login.html'), name='login'),
+path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
+    path('dashboard/', views.dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
-    path('', domov_view, name='domov'),  # nahradí raketu tvojím webom
+
 ]
+
+# from django.contrib import admin
+# from django.urls import path
+# from quiz.views import domov_view  
+
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     path('', domov_view, name='domov'),  # nahradí raketu tvojím webom
+# ]

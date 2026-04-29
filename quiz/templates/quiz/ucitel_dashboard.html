@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Učiteľský Dashboard</title>
+</head>
+<body>
+    <h1>Vitajte, pán učiteľ / pani učiteľka!</h1>
+    <p>Tu budete neskôr spravovať svoje testy a otázky.</p>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Odhlásiť sa</button>
+    </form></body>
+</html>

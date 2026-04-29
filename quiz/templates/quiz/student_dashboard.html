@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Študentský Dashboard</title>
+</head>
+<body>
+    <h1>Ahoj, študent!</h1>
+    <p>Tu uvidíš zoznam testov, ktoré môžeš riešiť.</p>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Odhlásiť sa</button>
+    </form></body>
+</html>

@@ -1,4 +1,5 @@
 
+
 1.
 Instalacia django do python: 
 pip list(ake kniznice mame cez pip nainstalovane d pythonu)

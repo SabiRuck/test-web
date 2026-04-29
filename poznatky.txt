@@ -4,6 +4,9 @@ admin heslo - admin
 admin meno - admin
 admin email - admin@admin.sk
 
+ucitel hanka Kava!Les_92Most
+ziak janko Zima#Rieka7List
+
 osoba A - Sabi
 osoba B - Peta
 
@@ -21,7 +24,7 @@ Checkpoint: V Django admine viete vytvoriť test a priradiť mu otázky.
 2. Týždeň: Autentifikácia a CRUD (Učiteľská časť)
 Učiteľ potrebuje vedieť spravovať databázu otázok a testov cez web, nie cez admina.
 
-Študent A: Nastavenie Login/Logout systému a rozlíšenie rolí (Učiteľ vs. Študent) – stačí cez is_staff alebo skupiny.
+Študent A: Nastavenie  Login/Logout systému a rozlíšenie rolí (Učiteľvs. Študent) – stačí cez is_staff alebo skupiny.
 
 Študent B: Tvorba pohľadov (Views) a formulárov pre CRUD operácie (Vytvoriť/Upraviť test a otázky).
 

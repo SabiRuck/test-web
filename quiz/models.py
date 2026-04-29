@@ -1,22 +1,18 @@
 from django.db import models
-
+from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
-class User(models.Model):
-    username = models.CharField(max_length=50, unique=True)
-    password = models.CharField(max_length=255)
-    meno = models.CharField(max_length=100)
-    priezvisko = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+class Profil(models.Model):
+    # Toto vytvorí väzbu 1:1. Každý Profil má práve jedného Usera a naopak.
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profil')
+    
+    # Tvoje vlastné polia (ostatné ako meno/email sú už v Userovi)
     vek = models.PositiveIntegerField(null=True, blank=True)
     is_teacher = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email'] # To, čo sa pýta pri createsuperuser okrem mena a hesla
-
     def __str__(self):
-        return f"{self.username} ({'Učiteľ' if self.is_teacher else 'Študent'})"
-    
+        return f"{self.user.username} ({'Učiteľ' if self.is_teacher else 'Študent'})"
 
 class Question(models.Model):
     TYPES = [
@@ -61,12 +57,14 @@ class TestQuestion(models.Model):
         ordering = ['order']
 
 class Result(models.Model):
+    # Odporúčam odkazovať na originál Usera kvôli autentifikácii
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    test = models.ForeignKey('Test', on_delete=models.CASCADE)
     score = models.IntegerField()
     percentage = models.DecimalField(max_digits=5, decimal_places=2)
     completed_at = models.DateTimeField(auto_now_add=True)
 
+    
 class StudentResponse(models.Model):
     result = models.ForeignKey(Result, on_delete=models.CASCADE, related_name='responses')
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
