@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Školský Testovač{% endblock %}</title>
+    
+    <!-- Jediné prepojenie na dizajn -->
+    <link rel="stylesheet" href="{% static 'quiz/style.css' %}">
+</head>
+<body>
+
+    <!-- HLAVNÉ MENU -->
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <a href="{% url 'index' %}">🏠 EduApp</a>
+        </div>
+        
+        <div class="nav-links">
+            {% if user.is_authenticated %}
+                <span class="user-welcome">Ahoj, {{ user.username }}!</span>
+                <a href="{% url 'dashboard' %}" class="link-dashboard">Dashboard</a>
+                
+                <form action="{% url 'logout' %}" method="post" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">Odhlásiť sa</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-login">Prihlásiť sa</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- HLAVNÝ OBSAH -->
+    <main class="container">
+        {% block content %}
+        <!-- Sem sa vloží obsah z ostatných šablón -->
+        {% endblock %}
+    </main>
+
+    <!-- PÄTIČKA -->
+    <footer class="main-footer">
+        &copy; 2026 - Tímový projekt
+    </footer>
+
+</body>
+</html>

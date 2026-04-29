@@ -23,8 +23,9 @@ urlpatterns = [
     path('', views.index, name='index'),
     # Django má hotové views na login a logout
     path('login/', auth_views.LoginView.as_view(template_name='quiz/login.html'), name='login'),
-path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/novy-test/', views.vytvor_test, name='vytvor_test'),
     path('admin/', admin.site.urls),
 
 ]
