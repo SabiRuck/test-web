@@ -1,0 +1,81 @@
+{% extends 'quiz/base.html' %}
+
+{% block content %}
+    <h1>Test: {{ test.title }}</h1>
+    <p><strong>Predmet:</strong> {{ test.subject }}</p>
+    
+    <!-- ČASOMIERA -->
+    <div>
+        Zostávajúci čas: <span id="timer">--:--</span>
+    </div>
+
+    <hr>
+
+    <form id="test-form" method="post" action="{% url 'vyhodnot_test' test.id %}">
+        {% csrf_token %}
+
+        {% for otazka in otazky %}
+            <div>
+                <p><strong>{{ forloop.counter }}. {{ otazka.text }}</strong> (Body: {{ otazka.points }})</p>
+                
+                {% if otazka.type == 'TXT' %}
+                    <!-- Krátka odpoveď -->
+                    <p>Napíšte odpoveď:</p>
+                    <input type="text" name="otazka_{{ otazka.id }}">
+
+                {% elif otazka.type == 'MC' %}
+                    <!-- Viac správnych (Multiple Choice) -->
+                    <p><small>Vyberte jednu alebo viac odpovedí:</small></p>
+                    {% for odpoved in otazka.answers.all %}
+                        <label>
+                            <input type="checkbox" name="otazka_{{ otazka.id }}" value="{{ odpoved.id }}">
+                            {{ odpoved.text }}
+                        </label>
+                        <br>
+                    {% endfor %}
+
+                {% elif otazka.type == 'SC' %}
+                    <!-- Jedna správna (Single Choice) -->
+                    <p><small>Vyberte práve jednu odpoveď:</small></p>
+                    {% for odpoved in otazka.answers.all %}
+                        <label>
+                            <input type="radio" name="otazka_{{ otazka.id }}" value="{{ odpoved.id }}" required>
+                            {{ odpoved.text }}
+                        </label>
+                        <br>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <hr>
+        {% endfor %}
+
+        <button type="submit">
+            ODOVZDAŤ TEST
+        </button>
+    </form>
+
+    <!-- JAVASCRIPT PRE ČASOMIERU -->
+    <script>
+        let timeInSeconds = {{ test.time_limit }} * 60;
+        const timerDisplay = document.getElementById('timer');
+        const testForm = document.getElementById('test-form');
+
+        const countdown = setInterval(function() {
+            let minutes = Math.floor(timeInSeconds / 60);
+            let seconds = timeInSeconds % 60;
+
+            if (seconds < 10) {
+                seconds = '0' + seconds;
+            }
+            
+            timerDisplay.innerHTML = minutes + ":" + seconds;
+
+            if (timeInSeconds <= 0) {
+                clearInterval(countdown);
+                alert("Čas vypršal! Test sa automaticky odosiela.");
+                testForm.submit();
+            }
+            timeInSeconds--;
+        }, 1000);
+    </script>
+{% endblock %}
