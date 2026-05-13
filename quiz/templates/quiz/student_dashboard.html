@@ -1,13 +1,75 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Študentský Dashboard</title>
-</head>
-<body>
-    <h1>Ahoj, študent!</h1>
-    <p>Tu uvidíš zoznam testov, ktoré môžeš riešiť.</p>
-    <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Odhlásiť sa</button>
-    </form></body>
-</html>
+{% extends 'quiz/base.html' %}
+
+{% block title %}Študentský Dashboard{% endblock %}
+
+{% block content %}
+
+
+<p><strong>Trieda:</strong> {{ user.profil.trieda.nazov|default:"Nezaradený (kontaktuj učiteľa)" }}</p>
+
+<hr>
+
+<h3>📝 Nové testy na vypracovanie</h3>
+<table border="1" cellpadding="10" style="width:100%; border-collapse: collapse; margin-bottom: 30px;">
+    <thead>
+        <tr style="background-color: #f2f2f2;">
+            <th>Predmet</th>
+            <th>Názov testu</th>
+            <th>Časový limit</th>
+            <th>Akcia</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for test in nove_testy %}
+        <tr>
+            <td>{{ test.subject }}</td>
+            <td><strong>{{ test.title }}</strong></td>
+            <td>{{ test.time_limit }} min</td>
+            <td>
+                <a href="{% url 'spustit_test' test.id %}">
+                    <button style="background-color: #28a745; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;">▶ Spustiť test</button>
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="text-align: center; color: gray;">Momentálne nemáš žiadne nové testy.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+
+<h3>✅ Moje výsledky (vypracované testy)</h3>
+<table border="1" cellpadding="10" style="width:100%; border-collapse: collapse;">
+    <thead>
+        <tr style="background-color: #e8f5e9;">
+            <th>Názov testu</th>
+            <th>Dátum odovzdania</th>
+            <th>Získané body</th>
+            <th>Úspešnosť (%)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in vysledky %}
+        <tr>
+            <td>{{ r.test.title }}</td>
+            <td>{{ r.completed_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ r.score }} b.</td>
+            <td>
+                <a href="{% url 'detail_vysledku' r.id %}" style="text-decoration: none;">
+                    <strong style="color: {% if r.percentage >= 50 %}green{% else %}red{% endif %};">
+                        {{ r.percentage }} % (Pozrieť chyby)
+                    </strong>
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="text-align: center; color: gray;">Zatiaľ si neodovzdal žiadny test.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

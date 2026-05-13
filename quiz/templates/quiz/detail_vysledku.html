@@ -1,0 +1,58 @@
+{% extends 'quiz/base.html' %}
+
+{% block content %}
+<h1>Výsledok testu: {{ vysledok.test.title }}</h1>
+<p>Dátum odovzdania: {{ vysledok.completed_at|date:"d.m.Y H:i" }}</p>
+<div style="font-size: 1.5em; margin-bottom: 20px;">
+    Celkové skóre: <strong>{{ vysledok.score }} b.</strong> ({{ vysledok.percentage }} %)
+</div>
+
+<hr>
+
+{% for tq in test_otazky %}
+<div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px;">
+    <h4>{{ forloop.counter }}. {{ tq.question.text }}</h4>
+    
+    <div style="margin-left: 20px;">
+        {% if tq.question.type == 'TXT' %}
+            <p>Tvoja odpoveď: <strong>{{ tq.question.student_text|default:"(žiadna)" }}</strong></p>
+            {% if tq.question.is_correct_txt %}
+                <span style="color: green; font-weight: bold;">✔ Správne</span>
+            {% else %}
+                <span style="color: red; font-weight: bold;">✘ Nesprávne</span>
+                <p><small>Správna odpoveď by mala byť jedna z: 
+                    {% for a in tq.question.answers.all %}{% if a.is_correct %}{{ a.text }}{% endif %}{% endfor %}
+                </small></p>
+            {% endif %}
+
+        {% else %}
+            <ul style="list-style: none; padding: 0;">
+            {% for answer in tq.question.answers.all %}
+                <li style="padding: 10px; margin-bottom: 5px; border-radius: 4px; border: 1px solid #eee;
+                    {% if answer.is_correct %} background-color: #e8f5e9; border-color: #28a745; {% endif %}
+                    {% if answer.is_selected and not answer.is_correct %} background-color: #fce4e4; border-color: #dc3545; {% endif %}">
+                    
+                    <strong>
+                        {% if answer.is_selected %} [X] {% else %} [ ] {% endif %}
+                    </strong>
+                    {{ answer.text }}
+
+                    {% if answer.is_correct %} 
+                        <span style="color: green; margin-left: 10px;">(Správna odpoveď)</span> 
+                    {% endif %}
+                    
+                    {% if answer.is_selected and not answer.is_correct %}
+                        <span style="color: red; margin-left: 10px;">(Tvoja chybná voľba)</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+<div style="margin-top: 30px;">
+    <a href="{% url 'dashboard' %}"><button style="padding: 10px 20px; cursor: pointer;">Späť na Dashboard</button></a>
+</div>
+{% endblock %}

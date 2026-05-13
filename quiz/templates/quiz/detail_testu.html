@@ -11,9 +11,23 @@
     <tr><td><strong>Triedy:</strong></td><td>
         {% for t in test.assigned_classes.all %}{{ t.nazov }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}
     </td></tr>
-    <tr><td><strong>Stav:</strong></td><td>
-        {% if test.is_published %}<strong style="color:green">✅ Zverejnený</strong>{% else %}<em>Koncept</em>{% endif %}
-    </td></tr>
+    <tr>
+        <td><strong>Stav:</strong></td>
+        <td>
+            {% if test.is_published %}
+                <strong style="color:green">✅ Zverejnený</strong>
+            {% else %}
+                <em style="color: gray;">Koncept (skrytý pre žiakov)</em>
+            {% endif %}
+            
+            <form method="post" action="{% url 'prepni_stav_testu' test.id %}" style="display:inline; margin-left: 10px;">
+                {% csrf_token %}
+                <button type="submit" style="font-size: 0.8em; cursor: pointer;">
+                    {% if test.is_published %} Skryť test (Koncept) {% else %} Zverejniť test teraz {% endif %}
+                </button>
+            </form>
+        </td>
+    </tr>
 </table>
 <hr>
 <h2>Otázky v teste</h2>
@@ -54,3 +68,4 @@
 &nbsp;&nbsp;
 <a href="{% url 'banka_otazok' test.id %}"><button>🔍 Nájsť otázku z banky</button></a>
 {% endblock %}
+<a href="{% url 'uprav_test' test.id %}"><button style="background-color: #ffc107;">⚙ Upraviť nastavenia testu</button></a>

@@ -1,81 +1,113 @@
-{% extends 'quiz/base.html' %}
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test: {{ test.title }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #f4f4f9; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: 20px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { position: sticky; top: 0; background: white; padding: 10px 0; border-bottom: 2px solid #ddd; z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
+        .timer-box { font-size: 1.2em; font-weight: bold; color: #d9534f; background: #fff5f5; padding: 10px; border-radius: 5px; border: 1px solid #d9534f; }
+        .question-card { margin-bottom: 30px; padding: 20px; border: 1px solid #eee; border-radius: 8px; }
+        .question-text { font-size: 1.1em; font-weight: bold; margin-bottom: 15px; }
+        .options label { display: block; margin-bottom: 10px; cursor: pointer; padding: 8px; border-radius: 4px; }
+        .options label:hover { background-color: #f8f9fa; }
+        input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .submit-btn { background-color: #007bff; color: white; border: none; padding: 15px 40px; font-size: 1.1em; border-radius: 5px; cursor: pointer; width: 100%; }
+        .submit-btn:hover { background-color: #0056b3; }
+    </style>
+</head>
+{% block title %}Riešenie testu: {{ test.title }}{% endblock %}
 
 {% block content %}
-    <h1>Test: {{ test.title }}</h1>
-    <p><strong>Predmet:</strong> {{ test.subject }}</p>
-    
-    <!-- ČASOMIERA -->
-    <div>
-        Zostávajúci čas: <span id="timer">--:--</span>
+<div style="position: sticky; top: 0; background: white; padding: 10px; border-bottom: 2px solid #ddd; z-index: 1000; display: flex; justify-content: space-between; align-items: center;">
+    <h2>{{ test.title }}</h2>
+    <div style="font-size: 1.2em; font-weight: bold; color: #d9534f; background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #d9534f;">
+        ⏱ Zostávajúci čas: <span id="timer">--:--</span>
     </div>
+</div>
 
-    <hr>
+<p style="margin-top: 20px;"><strong>Predmet:</strong> {{ test.subject }} | <strong>Limit:</strong> {{ test.time_limit }} minút</p>
+<hr>
 
-    <form id="test-form" method="post" action="{% url 'vyhodnot_test' test.id %}">
-        {% csrf_token %}
+<form id="test-form" method="post" action="{% url 'spustit_test' test.id %}">
+    {% csrf_token %}
 
-        {% for otazka in otazky %}
-            <div>
-                <p><strong>{{ forloop.counter }}. {{ otazka.text }}</strong> (Body: {{ otazka.points }})</p>
-                
-                {% if otazka.type == 'TXT' %}
-                    <!-- Krátka odpoveď -->
-                    <p>Napíšte odpoveď:</p>
-                    <input type="text" name="otazka_{{ otazka.id }}">
+    {% for otazka in otazky %}
+    <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #eee; border-radius: 8px; background-color: #fff;">
+        <p style="font-size: 1.1em;"><strong>{{ forloop.counter }}. {{ otazka.text }}</strong> 
+           <span style="color: #666; font-size: 0.9em; float: right;">({{ otazka.points }} b.)</span>
+        </p>
+        
+        <div style="margin-top: 15px; padding-left: 10px;">
+            {% if otazka.type == 'TXT' %}
+                <input type="text" name="otazka_{{ otazka.id }}" placeholder="Vaša odpoveď..." 
+                       style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
 
-                {% elif otazka.type == 'MC' %}
-                    <!-- Viac správnych (Multiple Choice) -->
-                    <p><small>Vyberte jednu alebo viac odpovedí:</small></p>
-                    {% for odpoved in otazka.answers.all %}
-                        <label>
-                            <input type="checkbox" name="otazka_{{ otazka.id }}" value="{{ odpoved.id }}">
-                            {{ odpoved.text }}
-                        </label>
-                        <br>
-                    {% endfor %}
+            {% elif otazka.type == 'MC' %}
+                <p style="color: #888; font-size: 0.85em; margin-bottom: 10px;">Vyberte jednu alebo viac odpovedí:</p>
+                {% for odpoved in otazka.answers.all %}
+                <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                    <input type="checkbox" name="otazka_{{ otazka.id }}" value="{{ odpoved.id }}"> 
+                    {{ odpoved.text }}
+                </label>
+                {% endfor %}
 
-                {% elif otazka.type == 'SC' %}
-                    <!-- Jedna správna (Single Choice) -->
-                    <p><small>Vyberte práve jednu odpoveď:</small></p>
-                    {% for odpoved in otazka.answers.all %}
-                        <label>
-                            <input type="radio" name="otazka_{{ otazka.id }}" value="{{ odpoved.id }}" required>
-                            {{ odpoved.text }}
-                        </label>
-                        <br>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <hr>
-        {% endfor %}
+            {% elif otazka.type == 'SC' %}
+                <p style="color: #888; font-size: 0.85em; margin-bottom: 10px;">Vyberte práve jednu odpoveď:</p>
+                {% for odpoved in otazka.answers.all %}
+                <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                    <input type="radio" name="otazka_{{ otazka.id }}" value="{{ odpoved.id }}" required> 
+                    {{ odpoved.text }}
+                </label>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
 
-        <button type="submit">
+    <div style="text-align: center; margin-top: 40px; padding-bottom: 50px;">
+        <button type="submit" onclick="return confirm('Naozaj chcete test odovzdať?')" 
+                style="background-color: #007bff; color: white; border: none; padding: 15px 40px; font-size: 1.1em; border-radius: 5px; cursor: pointer;">
             ODOVZDAŤ TEST
         </button>
-    </form>
+    </div>
+</form>
 
-    <!-- JAVASCRIPT PRE ČASOMIERU -->
-    <script>
-        let timeInSeconds = {{ test.time_limit }} * 60;
-        const timerDisplay = document.getElementById('timer');
-        const testForm = document.getElementById('test-form');
+<script>
+    // Nastavenie času z Django modelu
+    let timeInSeconds = parseInt("{{ test.time_limit }}") * 60;
+    const timerDisplay = document.getElementById('timer');
+    const testForm = document.getElementById('test-form');
 
-        const countdown = setInterval(function() {
-            let minutes = Math.floor(timeInSeconds / 60);
-            let seconds = timeInSeconds % 60;
+    function updateTimer() {
+        let minutes = Math.floor(timeInSeconds / 60);
+        let seconds = timeInSeconds % 60;
 
-            if (seconds < 10) {
-                seconds = '0' + seconds;
-            }
-            
-            timerDisplay.innerHTML = minutes + ":" + seconds;
+        // Formátovanie na 00:00
+        timerDisplay.innerHTML = minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
 
-            if (timeInSeconds <= 0) {
-                clearInterval(countdown);
-                alert("Čas vypršal! Test sa automaticky odosiela.");
-                testForm.submit();
-            }
-            timeInSeconds--;
-        }, 1000);
-    </script>
+        if (timeInSeconds <= 0) {
+            clearInterval(countdown);
+            alert("Čas vypršal! Test sa automaticky odosiela.");
+            testForm.submit();
+        }
+        timeInSeconds--;
+    }
+
+    // Spustenie časovača
+    updateTimer();
+    const countdown = setInterval(updateTimer, 1000);
+
+    // Prevencia náhodného zatvorenia stránky
+    window.onbeforeunload = function() {
+        return "Máte rozpracovaný test. Naozaj chcete odísť? Vaše zmeny sa neuložia.";
+    };
+
+    // Odstránenie varovania pri korektnom odoslaní formulára
+    testForm.onsubmit = function() {
+        window.onbeforeunload = null;
+    };
+</script>
 {% endblock %}

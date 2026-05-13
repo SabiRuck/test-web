@@ -2,9 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.forms import formset_factory
-from .models import Test, Trieda, Profil, Question, Answer, TestQuestion
 from .forms import TestForm, TriedaForm, ProfilTriedaForm, QuestionForm, AnswerForm
-
+from .models import Test, Trieda, Profil, Question, Answer, TestQuestion, Result, StudentResponse
 
 def is_teacher_or_staff(user):
     try:
@@ -23,17 +22,27 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    # Auto-create Profil if missing (e.g. admin created via command line)
     profil, _ = Profil.objects.get_or_create(user=request.user)
 
     if is_teacher_or_staff(request.user):
         testy = Test.objects.prefetch_related('assigned_classes').all()
         return render(request, 'quiz/ucitel_dashboard.html', {'testy': testy})
     else:
-        testy = Test.objects.filter(is_published=True)
-        return render(request, 'quiz/student_dashboard.html', {'testy': testy})
+        # 1. Získame testy, ktoré sú zverejnené a priradené triede študenta
+        vsetky_testy = Test.objects.filter(is_published=True, assigned_classes=profil.trieda)
+        
+        # 2. Získame ID testov, ktoré už študent vypracoval
+        vypracovane_ids = Result.objects.filter(user=request.user).values_list('test_id', flat=True)
+        
+        # 3. Rozdelíme testy
+        nove_testy = vsetky_testy.exclude(id__in=vypracovane_ids)
+        vysledky = Result.objects.filter(user=request.user).select_related('test').order_by('-completed_at')
 
-
+        return render(request, 'quiz/student_dashboard.html', {
+            'nove_testy': nove_testy,
+            'vysledky': vysledky
+        })
+    
 # ── TESTY (UČITEĽ) ────────────────────────────────────────────
 
 @login_required
@@ -189,3 +198,169 @@ def zarad_ziaka(request, profil_id):
         if form.is_valid():
             form.save()
     return redirect('sprava_tried')
+
+@login_required
+def prepni_stav_testu(request, test_id):
+    if not is_teacher_or_staff(request.user):
+        return redirect('index')
+    
+    test = get_object_or_404(Test, id=test_id)
+    if request.method == 'POST':
+        test.is_published = not test.is_published  # Preklopí hodnotu
+        test.save()
+        
+    return redirect('detail_testu', test_id=test.id)
+
+@login_required
+def uprav_test(request, test_id):
+    if not is_teacher_or_staff(request.user):
+        return redirect('index')
+    test = get_object_or_404(Test, id=test_id)
+    
+    if request.method == 'POST':
+        form = TestForm(request.POST, instance=test)
+        if form.is_valid():
+            form.save()
+            return redirect('detail_testu', test_id=test.id)
+    else:
+        form = TestForm(instance=test)
+    
+    return render(request, 'quiz/vytvor_test.html', {'form': form, 'edit_mode': True, 'test': test})
+
+@login_required
+def spustit_test(request, test_id):
+    test = get_object_or_404(Test, id=test_id, is_published=True)
+    
+    # 1. Kontrola, či už test nerobil
+    if Result.objects.filter(user=request.user, test=test).exists():
+        return redirect('dashboard')
+
+    # Načítame otázky pre šablónu
+    test_otazky = TestQuestion.objects.filter(test=test).select_related('question').order_by('order')
+
+    if request.method == 'POST':
+        celkove_body = 0
+        ziskane_body = 0
+
+        # Vytvoríme Result objekt
+        vysledok = Result.objects.create(
+            user=request.user,
+            test=test,
+            score=0,
+            percentage=0
+        )
+
+        for tq in test_otazky:
+            q = tq.question
+            celkove_body += q.points
+            
+            # Získame dáta z formulára (name v HTML je "otazka_{{ otazka.id }}")
+            field_name = f'otazka_{q.id}'
+            
+            if q.type == 'TXT':
+                odpoved_text = request.POST.get(field_name, '').strip()
+                
+                # 1. Nájdeme správnu odpoveď v DB pre túto otázku, aby sme ju mohli previazať
+                # (V modeli StudentResponse máš selected_answer ako ForeignKey na Answer)
+                spravna_odpoved_obj = q.answers.filter(is_correct=True).first()
+                
+                # Ak študent niečo napísal, musíme to zaznamenať. 
+                # Aby sme zachovali tvoj model, nájdeme odpoveď, ktorá sa zhoduje, 
+                # alebo vytvoríme záznam o tom, čo napísal.
+                
+                # Hľadáme, či sa študent trafil do nejakej existujúcej možnosti
+                najdena_odpoved = q.answers.filter(text__iexact=odpoved_text).first()
+                
+                if najdena_odpoved:
+                    # Ak napísal niečo, čo je v zozname odpovedí (či už správne alebo nesprávne)
+                    StudentResponse.objects.create(
+                        result=vysledok, 
+                        question=q, 
+                        selected_answer=najdena_odpoved
+                    )
+                    if najdena_odpoved.is_correct:
+                        ziskane_body += q.points
+                else:
+                    # Ak napísal niečo úplne iné (vždy nesprávne, lebo to nie je v DB)
+                    # Vytvoríme "dočasnú" odpoveď v DB, aby sme ju mohli zobraziť vo výsledkoch
+                    nova_neznama_odpoved = Answer.objects.create(
+                        question=q, 
+                        text=odpoved_text, 
+                        is_correct=False
+                    )
+                    StudentResponse.objects.create(
+                        result=vysledok, 
+                        question=q, 
+                        selected_answer=nova_neznama_odpoved
+                    )
+
+            elif q.type == 'SC':
+                answer_id = request.POST.get(field_name)
+                if answer_id:
+                    odpoved = Answer.objects.filter(id=answer_id).first()
+                    if odpoved:
+                        StudentResponse.objects.create(result=vysledok, question=q, selected_answer=odpoved)
+                        if odpoved.is_correct:
+                            ziskane_body += q.points
+
+            elif q.type == 'MC':
+                selected_ids = request.POST.getlist(field_name)
+                # Získame všetky správne odpovede pre túto otázku
+                correct_answers = q.answers.filter(is_correct=True).values_list('id', flat=True)
+                
+                # Bodovanie MC: Študent musí označiť presne všetky správne (jednoduchá logika)
+                if set(map(int, selected_ids)) == set(correct_answers):
+                    ziskane_body += q.points
+                
+                # Uložíme každú zaškrtnutú odpoveď
+                for aid in selected_ids:
+                    odpoved = Answer.objects.filter(id=aid).first()
+                    if odpoved:
+                        StudentResponse.objects.create(result=vysledok, question=q, selected_answer=odpoved)
+
+        # Finálny výpočet
+        vysledok.score = ziskane_body
+        vysledok.percentage = (ziskane_body / celkove_body * 100) if celkove_body > 0 else 0
+        vysledok.save()
+
+        return redirect('dashboard')
+
+    # Pri GET požiadavke pošleme otázky do šablóny
+    return render(request, 'quiz/spustit_test.html', {
+        'test': test, 
+        'otazky': [tq.question for tq in test_otazky] # Pošleme zoznam samotných otázok
+    })
+    
+@login_required
+def detail_vysledku(request, result_id):
+    vysledok = get_object_or_404(Result, id=result_id, user=request.user)
+    
+    # Získame všetky odpovede študenta naraz
+    odpovede_studenta = StudentResponse.objects.filter(result=vysledok).select_related('selected_answer')
+    
+    # Vytvoríme si mapu {question_id: selected_answer_object}
+    mapa_odpovedi = {resp.question_id: resp.selected_answer for resp in odpovede_studenta}
+
+    test_otazky = TestQuestion.objects.filter(test=vysledok.test).select_related('question').order_by('order')
+
+    for tq in test_otazky:
+        otazka = tq.question
+        odpoved_obj = mapa_odpovedi.get(otazka.id) # Čo reálne študent "odovzdal"
+
+        if otazka.type == 'TXT':
+            if odpoved_obj:
+                otazka.student_text = odpoved_obj.text
+                otazka.is_correct_txt = odpoved_obj.is_correct
+            else:
+                otazka.student_text = "(žiadna)"
+                otazka.is_correct_txt = False
+        else:
+            # Pre SC a MC (ideme cez všetky Answer otázky)
+            vybrane_ids = odpovede_studenta.filter(question=otazka).values_list('selected_answer_id', flat=True)
+            for ans in otazka.answers.all():
+                ans.is_selected = ans.id in vybrane_ids
+
+    return render(request, 'quiz/detail_vysledku.html', {
+        'vysledok': vysledok,
+        'test_otazky': test_otazky,
+    })
