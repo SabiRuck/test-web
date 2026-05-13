@@ -55,6 +55,11 @@
                     {% csrf_token %}
                     <button type="submit" onclick="return confirm('Odstrániť otázku z testu?')">🗑 Odstrániť</button>
                 </form>
+                {% if tq.mozem_upravit %}
+                    <a href="{% url 'uprav_otazku' tq.question.id %}?test_id={{ test.id }}"><button>✏ Upraviť</button></a>
+                {% else %}
+                    <em style="color:gray; font-size:0.85em;">zdieľaná otázka</em>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

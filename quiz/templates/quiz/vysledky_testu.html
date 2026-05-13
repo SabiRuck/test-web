@@ -3,7 +3,9 @@
 <h2>Výsledky: {{ test.title }}</h2>
 
 <form method="get">
-    <select name="trieda" onchange="this.form.submit()">
+    <input type="text" name="ziak" value="{{ hladaj_ziaka }}" placeholder="Hľadaj žiaka (username)">
+    
+    <select name="trieda">
         <option value="">Všetky triedy</option>
         {% for trieda in triedy %}
             <option value="{{ trieda.nazov }}" {% if trieda.nazov == trieda_filter %}selected{% endif %}>
@@ -11,8 +13,16 @@
             </option>
         {% endfor %}
     </select>
+    
+    <button type="submit">Hľadať</button>
+    {% if hladaj_ziaka or trieda_filter %}
+        <a href="{% url 'vysledky_testu' test.id %}">Zrušiť filter</a>
+    {% endif %}
 </form>
 
+{% if not vysledky %}
+    <p><em>Žiadny žiak nevyhovuje hľadaniu.</em></p>
+{% else %}
 <table>
     <tr>
         <th>Žiak</th>
@@ -29,8 +39,8 @@
         <td>{{ v.percentage }}%</td>
         <td>{{ v.completed_at|date:"d.m.Y" }}</td>
     </tr>
-    {% empty %}
-        <tr><td colspan="5">Žiadne výsledky</td></tr>
     {% endfor %}
 </table>
+{% endif %}
+
 {% endblock %}

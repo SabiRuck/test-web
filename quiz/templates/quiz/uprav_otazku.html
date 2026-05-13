@@ -1,0 +1,21 @@
+{% extends 'quiz/base.html' %}
+{% block content %}
+<h2>Upraviť otázku</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="test_id" value="{{ test_id }}">
+    
+    {{ q_form.as_p }}
+    
+    <h3>Odpovede</h3>
+    {{ a_formset.management_form }}
+    {% for form in a_formset %}
+        {{ form.as_p }}
+        <hr>
+    {% endfor %}
+    
+    <button type="submit">Uložiť zmeny</button>
+    <a href="{% url 'detail_testu' test_id %}">Zrušiť</a>
+</form>
+{% endblock %}

@@ -25,5 +25,7 @@ urlpatterns = [
     path('vysledok/<int:result_id>/', views.detail_vysledku, name='detail_vysledku'),
     path('test/<int:test_id>/vysledky/', views.vysledky_testu, name='vysledky_testu'),
     path('test/<int:test_id>/uprav/', views.uprav_test, name='uprav_test'),
+    path('otazka/<int:question_id>/uprav/', views.uprav_otazku, name='uprav_otazku'),
+
 
 ]

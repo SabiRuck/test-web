@@ -25,7 +25,31 @@ def dashboard(request):
 
     if is_teacher_or_staff(request.user):
         testy = Test.objects.prefetch_related('assigned_classes').all()
-        return render(request, 'quiz/ucitel_dashboard.html', {'testy': testy})
+        
+        publikovany_filter = request.GET.get('publikovany', '')
+        trieda_filter = request.GET.get('trieda', '')
+        predmet_filter = request.GET.get('predmet', '')
+
+        if publikovany_filter == '1':
+            testy = testy.filter(is_published=True)
+        elif publikovany_filter == '0':
+            testy = testy.filter(is_published=False)
+
+        if trieda_filter:
+            testy = testy.filter(assigned_classes__nazov=trieda_filter)
+
+        if predmet_filter:
+            testy = testy.filter(subject__icontains=predmet_filter)
+
+        triedy = Trieda.objects.all()
+
+        return render(request, 'quiz/ucitel_dashboard.html', {
+            'testy': testy,
+            'triedy': triedy,
+            'publikovany_filter': publikovany_filter,
+            'trieda_filter': trieda_filter,
+            'predmet_filter': predmet_filter,
+        })
     else:
         predmet_filter = request.GET.get('predmet', '')
 
@@ -68,6 +92,13 @@ def detail_testu(request, test_id):
         return redirect('index')
     test = get_object_or_404(Test, id=test_id)
     test_otazky = TestQuestion.objects.filter(test=test).select_related('question').order_by('order')
+    
+    for tq in test_otazky:
+        otazka = tq.question
+        je_moja = otazka.created_by == request.user
+        pouziva_nekto_iny = otazka.tests.exclude(id=test.id).exists()
+        tq.mozem_upravit = je_moja and not pouziva_nekto_iny
+
     return render(request, 'quiz/detail_testu.html', {
         'test': test,
         'test_otazky': test_otazky,
@@ -85,7 +116,9 @@ def vytvor_otazku(request, test_id):
         q_form = QuestionForm(request.POST)
         a_formset = AnswerFormSet(request.POST, prefix='odpovede')
         if q_form.is_valid() and a_formset.is_valid():
-            otazka = q_form.save()
+            otazka = q_form.save(commit=False)
+            otazka.created_by = request.user
+            otazka.save()
             for a_form in a_formset:
                 if a_form.cleaned_data.get('text'):
                     Answer.objects.create(
@@ -105,7 +138,7 @@ def vytvor_otazku(request, test_id):
         'q_form': q_form,
         'a_formset': a_formset,
     })
-
+    
 
 @login_required
 def zmaz_otazku_z_testu(request, test_id, tq_id):
@@ -374,17 +407,65 @@ def vysledky_testu(request, test_id):
     test = get_object_or_404(Test, id=test_id)
     vysledky = Result.objects.filter(test=test).select_related('user__profil__trieda').order_by('-completed_at')
     
-    # Filter podla triedy
     trieda_filter = request.GET.get('trieda', '')
+    hladaj_ziaka = request.GET.get('ziak', '')
+
     if trieda_filter:
         vysledky = vysledky.filter(user__profil__trieda__nazov=trieda_filter)
     
-    # Zoznam tried pre dropdown
-    triedy = Trieda.objects.filter(tests=test)
-    
+    if hladaj_ziaka:
+        vysledky = vysledky.filter(user__username__icontains=hladaj_ziaka)
+
+    triedy = Trieda.objects.filter(studenti__user__result__test=test).distinct()
+
     return render(request, 'quiz/vysledky_testu.html', {
         'test': test,
         'vysledky': vysledky,
         'triedy': triedy,
         'trieda_filter': trieda_filter,
+        'hladaj_ziaka': hladaj_ziaka,
+    })
+
+@login_required
+def uprav_otazku(request, question_id):
+    if not is_teacher_or_staff(request.user):
+        return redirect('index')
+    
+    otazka = get_object_or_404(Question, id=question_id, created_by=request.user)
+    
+    # Bezpecnostna kontrola - nepouziva ju nikto iny
+    test_id = request.GET.get('test_id') or request.POST.get('test_id')
+    if otazka.tests.exclude(id=test_id).exists():
+        return redirect('dashboard')
+    
+    AnswerFormSet = formset_factory(AnswerForm, extra=0)
+    existujuce_odpovede = otazka.answers.all()
+    
+    initial_data = [{'text': a.text, 'is_correct': a.is_correct} for a in existujuce_odpovede]
+
+    if request.method == 'POST':
+        q_form = QuestionForm(request.POST, instance=otazka)
+        a_formset = AnswerFormSet(request.POST, prefix='odpovede', initial=initial_data)
+        
+        if q_form.is_valid() and a_formset.is_valid():
+            q_form.save()
+            # Zmaz stare odpovede a uloz nove
+            otazka.answers.all().delete()
+            for a_form in a_formset:
+                if a_form.cleaned_data.get('text'):
+                    Answer.objects.create(
+                        question=otazka,
+                        text=a_form.cleaned_data['text'],
+                        is_correct=a_form.cleaned_data.get('is_correct', False),
+                    )
+            return redirect('detail_testu', test_id=test_id)
+    else:
+        q_form = QuestionForm(instance=otazka)
+        a_formset = AnswerFormSet(prefix='odpovede', initial=initial_data)
+
+    return render(request, 'quiz/uprav_otazku.html', {
+        'q_form': q_form,
+        'a_formset': a_formset,
+        'otazka': otazka,
+        'test_id': test_id,
     })

@@ -10,6 +10,31 @@
     {% endif %}
 
     <h3>Vaše testy:</h3>
+
+    <form method="get">
+        <input type="text" name="predmet" value="{{ predmet_filter }}" placeholder="Predmet">
+        
+        <select name="trieda">
+            <option value="">Všetky triedy</option>
+            {% for trieda in triedy %}
+                <option value="{{ trieda.nazov }}" {% if trieda.nazov == trieda_filter %}selected{% endif %}>
+                    {{ trieda.nazov }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="publikovany">
+            <option value="">Všetky</option>
+            <option value="1" {% if publikovany_filter == '1' %}selected{% endif %}>Zverejnené</option>
+            <option value="0" {% if publikovany_filter == '0' %}selected{% endif %}>Koncepty</option>
+        </select>
+
+        <button type="submit">Filtrovať</button>
+        {% if predmet_filter or trieda_filter or publikovany_filter %}
+            <a href="{% url 'dashboard' %}">Zrušiť filter</a>
+        {% endif %}
+    </form>
+
     <table border="1" cellpadding="6">
         <thead>
             <tr>
@@ -40,7 +65,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5">Zatiaľ ste nevytvorili žiadne testy.</td>
+                <td colspan="5">Žiadne testy nevyhovujú filtru.</td>
             </tr>
             {% endfor %}
         </tbody>

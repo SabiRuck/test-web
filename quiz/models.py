@@ -23,7 +23,6 @@ class Profil(models.Model):
         return f"{self.user.username}"
     
 
-
 class Question(models.Model):
     TYPES = [
         ('SC', 'Single Choice'),
@@ -32,10 +31,12 @@ class Question(models.Model):
     ]
     text = models.TextField()
     type = models.CharField(max_length=3, choices=TYPES)
-    points = models.IntegerField(default=1) 
+    points = models.IntegerField(default=1)
+    created_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='otazky')
 
     def __str__(self):
         return self.text
+    
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
