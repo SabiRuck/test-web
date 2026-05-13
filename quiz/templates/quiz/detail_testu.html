@@ -67,5 +67,9 @@
 <a href="{% url 'vytvor_otazku' test.id %}"><button>➕ Vytvoriť novú otázku</button></a>
 &nbsp;&nbsp;
 <a href="{% url 'banka_otazok' test.id %}"><button>🔍 Nájsť otázku z banky</button></a>
-{% endblock %}
+&nbsp;&nbsp;
 <a href="{% url 'uprav_test' test.id %}"><button style="background-color: #ffc107;">⚙ Upraviť nastavenia testu</button></a>
+&nbsp;&nbsp;
+<a href="{% url 'vysledky_testu' test.id %}"><button style="background-color: #17a2b8;">📊 Výsledky žiakov</button></a>
+
+{% endblock %}

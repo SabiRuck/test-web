@@ -1,0 +1,36 @@
+{% extends "quiz/base.html" %}
+{% block content %}
+<h2>Výsledky: {{ test.title }}</h2>
+
+<form method="get">
+    <select name="trieda" onchange="this.form.submit()">
+        <option value="">Všetky triedy</option>
+        {% for trieda in triedy %}
+            <option value="{{ trieda.nazov }}" {% if trieda.nazov == trieda_filter %}selected{% endif %}>
+                {{ trieda.nazov }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
+<table>
+    <tr>
+        <th>Žiak</th>
+        <th>Trieda</th>
+        <th>Body</th>
+        <th>%</th>
+        <th>Dátum</th>
+    </tr>
+    {% for v in vysledky %}
+    <tr>
+        <td>{{ v.user.get_full_name|default:v.user.username }}</td>
+        <td>{{ v.user.profil.trieda }}</td>
+        <td>{{ v.score }}</td>
+        <td>{{ v.percentage }}%</td>
+        <td>{{ v.completed_at|date:"d.m.Y" }}</td>
+    </tr>
+    {% empty %}
+        <tr><td colspan="5">Žiadne výsledky</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

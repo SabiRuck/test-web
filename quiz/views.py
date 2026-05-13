@@ -19,7 +19,6 @@ def index(request):
 
 
 # ── DASHBOARD ─────────────────────────────────────────────────
-
 @login_required
 def dashboard(request):
     profil, _ = Profil.objects.get_or_create(user=request.user)
@@ -28,19 +27,21 @@ def dashboard(request):
         testy = Test.objects.prefetch_related('assigned_classes').all()
         return render(request, 'quiz/ucitel_dashboard.html', {'testy': testy})
     else:
-        # 1. Získame testy, ktoré sú zverejnené a priradené triede študenta
+        predmet_filter = request.GET.get('predmet', '')
+
         vsetky_testy = Test.objects.filter(is_published=True, assigned_classes=profil.trieda)
-        
-        # 2. Získame ID testov, ktoré už študent vypracoval
+
+        if predmet_filter:
+            vsetky_testy = vsetky_testy.filter(subject__icontains=predmet_filter)
+
         vypracovane_ids = Result.objects.filter(user=request.user).values_list('test_id', flat=True)
-        
-        # 3. Rozdelíme testy
         nove_testy = vsetky_testy.exclude(id__in=vypracovane_ids)
         vysledky = Result.objects.filter(user=request.user).select_related('test').order_by('-completed_at')
 
         return render(request, 'quiz/student_dashboard.html', {
             'nove_testy': nove_testy,
-            'vysledky': vysledky
+            'vysledky': vysledky,
+            'predmet_filter': predmet_filter,
         })
     
 # ── TESTY (UČITEĽ) ────────────────────────────────────────────
@@ -363,4 +364,27 @@ def detail_vysledku(request, result_id):
     return render(request, 'quiz/detail_vysledku.html', {
         'vysledok': vysledok,
         'test_otazky': test_otazky,
+    })
+
+@login_required
+def vysledky_testu(request, test_id):
+    if not is_teacher_or_staff(request.user):
+        return redirect('index')
+    
+    test = get_object_or_404(Test, id=test_id)
+    vysledky = Result.objects.filter(test=test).select_related('user__profil__trieda').order_by('-completed_at')
+    
+    # Filter podla triedy
+    trieda_filter = request.GET.get('trieda', '')
+    if trieda_filter:
+        vysledky = vysledky.filter(user__profil__trieda__nazov=trieda_filter)
+    
+    # Zoznam tried pre dropdown
+    triedy = Trieda.objects.filter(tests=test)
+    
+    return render(request, 'quiz/vysledky_testu.html', {
+        'test': test,
+        'vysledky': vysledky,
+        'triedy': triedy,
+        'trieda_filter': trieda_filter,
     })
