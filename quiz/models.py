@@ -2,17 +2,27 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
+
+class Trieda(models.Model):
+    nazov = models.CharField(max_length=10, unique=True)
+    class Meta:
+        verbose_name_plural = "Triedy"
+    def __str__(self):
+        return self.nazov
+    
+
 # Create your models here.
 class Profil(models.Model):
-    # Toto vytvorí väzbu 1:1. Každý Profil má práve jedného Usera a naopak.
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profil')
-    
-    # Tvoje vlastné polia (ostatné ako meno/email sú už v Userovi)
     vek = models.PositiveIntegerField(null=True, blank=True)
     is_teacher = models.BooleanField(default=False)
+    # Teraz už Python vie, čo je 'Trieda'
+    trieda = models.ForeignKey(Trieda, on_delete=models.SET_NULL, null=True, blank=True, related_name='studenti')
 
     def __str__(self):
-        return f"{self.user.username} ({'Učiteľ' if self.is_teacher else 'Študent'})"
+        return f"{self.user.username}"
+    
+
 
 class Question(models.Model):
     TYPES = [
@@ -41,11 +51,16 @@ class Test(models.Model):
     subject = models.CharField(max_length=100)
     time_limit = models.IntegerField(help_text="Limit v minútach")
     is_published = models.BooleanField(default=False)
+    
+    # --- NOVÉ POLE PRE PRIRADENIE TRIED ---
+    # Učiteľ môže vybrať viac tried pre jeden test
+    assigned_classes = models.ManyToManyField(Trieda, related_name='tests', blank=True)
 
     questions = models.ManyToManyField(Question, related_name='tests', through='TestQuestion')
 
     def __str__(self):
         return self.title
+    
 
 class TestQuestion(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)

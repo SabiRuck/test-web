@@ -1,19 +1,3 @@
-"""
-URL configuration for testovanie project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.urls import path
 from quiz import views
 from django.contrib.auth import views as auth_views
@@ -21,20 +5,19 @@ from django.contrib import admin
 
 urlpatterns = [
     path('', views.index, name='index'),
-    # Django má hotové views na login a logout
     path('login/', auth_views.LoginView.as_view(template_name='quiz/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='index'), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    # Testy
     path('dashboard/novy-test/', views.vytvor_test, name='vytvor_test'),
+    path('test/<int:test_id>/', views.detail_testu, name='detail_testu'),
+    path('test/<int:test_id>/nova-otazka/', views.vytvor_otazku, name='vytvor_otazku'),
+    path('test/<int:test_id>/zmaz-otazku/<int:tq_id>/', views.zmaz_otazku_z_testu, name='zmaz_otazku_z_testu'),
+    path('test/<int:test_id>/banka/', views.banka_otazok, name='banka_otazok'),
+    path('test/<int:test_id>/banka/pridaj/<int:question_id>/', views.pridaj_otazku_z_banky, name='pridaj_otazku_z_banky'),
+    # Správa tried – len admin
+    path('admin-panel/triedy/', views.sprava_tried, name='sprava_tried'),
+    path('admin-panel/triedy/<int:trieda_id>/zmaz/', views.zmaz_triedu, name='zmaz_triedu'),
+    path('admin-panel/ziak/<int:profil_id>/zarad/', views.zarad_ziaka, name='zarad_ziaka'),
     path('admin/', admin.site.urls),
-
 ]
-
-# from django.contrib import admin
-# from django.urls import path
-# from quiz.views import domov_view  
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('', domov_view, name='domov'),  # nahradí raketu tvojím webom
-# ]

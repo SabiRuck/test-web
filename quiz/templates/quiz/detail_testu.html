@@ -1,0 +1,56 @@
+{% extends 'quiz/base.html' %}
+{% block title %}{{ test.title }}{% endblock %}
+{% block content %}
+<a href="{% url 'dashboard' %}">← Späť na dashboard</a>
+<h1>{{ test.title }}</h1>
+
+<table border="0" cellpadding="4">
+    <tr><td><strong>Predmet:</strong></td><td>{{ test.subject }}</td></tr>
+    <tr><td><strong>Popis:</strong></td><td>{{ test.description }}</td></tr>
+    <tr><td><strong>Čas. limit:</strong></td><td>{{ test.time_limit }} min</td></tr>
+    <tr><td><strong>Triedy:</strong></td><td>
+        {% for t in test.assigned_classes.all %}{{ t.nazov }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}
+    </td></tr>
+    <tr><td><strong>Stav:</strong></td><td>
+        {% if test.is_published %}<strong style="color:green">✅ Zverejnený</strong>{% else %}<em>Koncept</em>{% endif %}
+    </td></tr>
+</table>
+<hr>
+<h2>Otázky v teste</h2>
+{% if test_otazky %}
+<table border="1" cellpadding="6">
+    <thead>
+        <tr><th>#</th><th>Otázka</th><th>Typ</th><th>Body</th><th>Odpovede</th><th>Akcia</th></tr>
+    </thead>
+    <tbody>
+        {% for tq in test_otazky %}
+        <tr>
+            <td>{{ tq.order }}</td>
+            <td>{{ tq.question.text }}</td>
+            <td>{{ tq.question.get_type_display }}</td>
+            <td>{{ tq.question.points }}</td>
+            <td>
+                <ul style="margin:0; padding-left:16px;">
+                {% for answer in tq.question.answers.all %}
+                    <li>{{ answer.text }}{% if answer.is_correct %} <strong style="color:green">(✓)</strong>{% endif %}</li>
+                {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <form method="post" action="{% url 'zmaz_otazku_z_testu' test.id tq.id %}">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Odstrániť otázku z testu?')">🗑 Odstrániť</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p><em>Tento test zatiaľ nemá žiadne otázky.</em></p>
+{% endif %}
+<br>
+<a href="{% url 'vytvor_otazku' test.id %}"><button>➕ Vytvoriť novú otázku</button></a>
+&nbsp;&nbsp;
+<a href="{% url 'banka_otazok' test.id %}"><button>🔍 Nájsť otázku z banky</button></a>
+{% endblock %}

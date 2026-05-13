@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User as DjangoUser
-from .models import Profil, Question, Answer, Test, TestQuestion, Result, StudentResponse
+from .models import Profil, Question, Answer, Test, TestQuestion, Result, StudentResponse, Trieda
 
 # 1. ROZŠÍRENIE ADMINA PRE POUŽÍVATEĽA
 class ProfilInline(admin.StackedInline):
@@ -40,6 +40,10 @@ class TestAdmin(admin.ModelAdmin):
     list_filter = ('subject', 'is_published')
     inlines = [TestQuestionInline]
 
+@admin.register(Trieda)
+class TriedaAdmin(admin.ModelAdmin):
+    list_display = ('nazov',)
+    
 # 3. ZVYŠNÉ REGISTRÁCIE
 admin.site.register(Result)
 admin.site.register(StudentResponse)

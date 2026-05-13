@@ -1,0 +1,100 @@
+{% extends 'quiz/base.html' %}
+
+{% block content %}
+<h1>Správa tried</h1>
+<a href="{% url 'dashboard' %}">← Späť na dashboard</a>
+
+<hr>
+
+<!-- VYTVORENIE NOVEJ TRIEDY -->
+<h2>Vytvoriť novú triedu</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" name="vytvor_triedu">Vytvoriť triedu</button>
+</form>
+
+<hr>
+
+<!-- ZOZNAM TRIED -->
+<h2>Existujúce triedy</h2>
+{% for trieda in triedy %}
+<div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px;">
+    <strong>{{ trieda.nazov }}</strong>
+    &nbsp;
+    <form method="post" action="{% url 'zmaz_triedu' trieda.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" onclick="return confirm('Naozaj zmazať triedu {{ trieda.nazov }}?')">🗑 Zmazať triedu</button>
+    </form>
+
+    <h4>Žiaci v triede:</h4>
+    {% if trieda.studenti.all %}
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr><th>Meno</th><th>Username</th><th>Akcia</th></tr>
+        </thead>
+        <tbody>
+            {% for profil in trieda.studenti.all %}
+            <tr>
+                <td>{{ profil.user.get_full_name|default:profil.user.username }}</td>
+                <td>{{ profil.user.username }}</td>
+                <td>
+                    <!-- Formulár na preradenie do inej triedy -->
+                    <form method="post" action="{% url 'zarad_ziaka' profil.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <select name="trieda">
+                            <option value="">--- žiadna trieda ---</option>
+                            {% for t in triedy %}
+                            <option value="{{ t.id }}" {% if t == trieda %}selected{% endif %}>{{ t.nazov }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit">Zmeniť</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p><em>Žiadni žiaci.</em></p>
+    {% endif %}
+</div>
+{% empty %}
+<p>Zatiaľ nie sú vytvorené žiadne triedy.</p>
+{% endfor %}
+
+<hr>
+
+<!-- ŽIACI BEZ TRIEDY -->
+<h2>Žiaci bez triedy</h2>
+{% if zaci_bez_triedy %}
+<table border="1" cellpadding="5">
+    <thead>
+        <tr><th>Meno</th><th>Username</th><th>Zaradiť do triedy</th></tr>
+    </thead>
+    <tbody>
+        {% for profil in zaci_bez_triedy %}
+        <tr>
+            <td>{{ profil.user.get_full_name|default:profil.user.username }}</td>
+            <td>{{ profil.user.username }}</td>
+            <td>
+                <form method="post" action="{% url 'zarad_ziaka' profil.id %}">
+                    {% csrf_token %}
+                    <select name="trieda">
+                        <option value="">--- vyber triedu ---</option>
+                        {% for t in triedy %}
+                        <option value="{{ t.id }}">{{ t.nazov }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Zaradiť</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Všetci žiaci sú zaradení do triedy. 👍</p>
+{% endif %}
+
+{% endblock %}

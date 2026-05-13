@@ -2,62 +2,47 @@
 
 {% block content %}
     <h1>Vitajte, pán učiteľ / pani učiteľka!</h1>
-    
-    <!-- Formulár na odhlásenie -->
-    <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Odhlásiť sa</button>
-    </form>
 
-    <hr>
-
-    {% if vytvaram_test %}
-        <!-- Časť pre vytvorenie nového testu -->
-        <h2>Vytvoriť nový test</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Uložiť test</button>
-            <a href="{% url 'dashboard' %}">Zrušiť</a>
-        </form>
-
-    {% else %}
-        <!-- Hlavný prehľad -->
-        <p>Tu spravujete svoje testy a otázky.</p>
-        
-        <a href="{% url 'vytvor_test' %}"><strong>+ PRIDAŤ NOVÝ TEST</strong></a>
-
-        <h3>Vaše testy:</h3>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Názov testu</th>
-                    <th>Predmet</th>
-                    <th>Limit (min)</th>
-                    <th>Stav</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for test in testy %}
-                <tr>
-                    <td>{{ test.title }}</td>
-                    <td>{{ test.subject }}</td>
-                    <td>{{ test.time_limit }}</td>
-                    <td>
-                        {% if test.is_published %}
-                            Publikovaný
-                        {% else %}
-                            Koncept
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4">Zatiaľ ste nevytvorili žiadne testy.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <a href="{% url 'vytvor_test' %}"><strong>+ PRIDAŤ NOVÝ TEST</strong></a>
+    {% if request.user.is_staff %}
+    &nbsp;|&nbsp;
+    <a href="{% url 'sprava_tried' %}"><strong>🏫 SPRÁVA TRIED</strong></a>
     {% endif %}
 
+    <h3>Vaše testy:</h3>
+    <table border="1" cellpadding="6">
+        <thead>
+            <tr>
+                <th>Názov testu</th>
+                <th>Predmet</th>
+                <th>Limit (min)</th>
+                <th>Triedy</th>
+                <th>Stav</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for test in testy %}
+            <tr>
+                <td><a href="{% url 'detail_testu' test.id %}">{{ test.title }}</a></td>
+                <td>{{ test.subject }}</td>
+                <td>{{ test.time_limit }}</td>
+                <td>
+                    {% for t in test.assigned_classes.all %}{{ t.nazov }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}—{% endfor %}
+                </td>
+                <td>
+                    {% if test.is_published %}
+                        <span style="color:green;">✅ Publikovaný</span>
+                    {% else %}
+                        <em>Koncept</em>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Zatiaľ ste nevytvorili žiadne testy.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

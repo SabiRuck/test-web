@@ -1,0 +1,47 @@
+{% extends 'quiz/base.html' %}
+{% block title %}Banka otázok – {{ test.title }}{% endblock %}
+{% block content %}
+<a href="{% url 'detail_testu' test.id %}">← Späť na test: {{ test.title }}</a>
+<h1>Banka otázok</h1>
+<p>Tu vidíš všetky existujúce otázky. Klikni <strong>+</strong> pri otázke, aby si ju pridala do testu <em>{{ test.title }}</em>.</p>
+<form method="get">
+    <input type="text" name="q" value="{{ hladaj }}" placeholder="Hľadaj otázku...">
+    <button type="submit">🔍 Hľadať</button>
+    {% if hladaj %}<a href="{% url 'banka_otazok' test.id %}">✕ Zrušiť filter</a>{% endif %}
+</form>
+<hr>
+{% if vsetky_otazky %}
+<table border="1" cellpadding="6">
+    <thead>
+        <tr><th>Otázka</th><th>Typ</th><th>Body</th><th>Odpovede (správna tučne)</th><th>Akcia</th></tr>
+    </thead>
+    <tbody>
+        {% for otazka in vsetky_otazky %}
+        <tr {% if otazka.id in uz_pridane_ids %}style="background:#e8f5e9;"{% endif %}>
+            <td>{{ otazka.text }}</td>
+            <td>{{ otazka.get_type_display }}</td>
+            <td>{{ otazka.points }}</td>
+            <td>
+                <ul style="margin:0; padding-left:16px;">
+                {% for answer in otazka.answers.all %}
+                    <li>{% if answer.is_correct %}<strong style="color:green">{{ answer.text }} ✓</strong>{% else %}{{ answer.text }}{% endif %}</li>
+                {% endfor %}
+                </ul>
+            </td>
+            <td style="text-align:center;">
+                {% if otazka.id in uz_pridane_ids %}
+                    <em style="color:green;">✅ Pridaná</em>
+                {% else %}
+                    <a href="{% url 'pridaj_otazku_z_banky' test.id otazka.id %}{% if hladaj %}?q={{ hladaj }}{% endif %}">
+                        <button>+ Pridať</button>
+                    </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p><em>Žiadne otázky nenájdené{% if hladaj %} pre „{{ hladaj }}"{% endif %}.</em></p>
+{% endif %}
+{% endblock %}
