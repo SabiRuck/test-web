@@ -1,7 +1,7 @@
 - mazanie testu
 -mozno pre ucitela upravit otazky/odpovede
 ✅ -Učiteľ nevidí výsledky žiakov
-- pridat login odkaz na uvodnu stranu
+✅ - pridat login odkaz na uvodnu stranu
 
 
 ✅ Podľa publikácie — toto je skôr pre učiteľa, aby na dashboarde videl len zverejnené alebo len rozpracované testy. Teraz vidí všetky naraz bez filtra.

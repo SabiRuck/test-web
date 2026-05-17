@@ -27,7 +27,10 @@
                     <button type="submit" class="btn-logout">Odhlásiť sa</button>
                 </form>
             {% else %}
-                <a href="{% url 'login' %}" class="btn-login">Prihlásiť sa</a>
+                {# Tlačidlo sa zobrazí iba vtedy, ak užívateľ NIE JE na prihlasovacej stránke #}
+                {% if request.resolver_match.url_name != 'login' %}
+                    <a href="{% url 'login' %}" class="btn-login">Prihlásiť sa</a>
+                {% endif %}
             {% endif %}
         </div>
     </nav>

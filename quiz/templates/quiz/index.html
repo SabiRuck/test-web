@@ -1,29 +1,23 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="sk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Školské testy{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'quiz/style.css' %}">
-</head>
-<body>
+{% extends 'quiz/base.html' %}
+{% block title %}EduApp – Školské testovanie{% endblock %}
 
-    <nav>
-        <a href="/">Domov</a>
-        <a href="/admin/">Administrácia</a>
-    </nav>
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <span class="hero-badge">Vitaj v aplikácii EduApp</span>
+        <h1 class="hero-title">Online školský testovací systém</h1>
+        <p class="hero-description">
+            Prihlás sa do svojho účtu a prever si svoje vedomosti z aktuálnych učebných materiálov. 
+            Po dokončení testu získaš okamžitú spätnú väzbu a prehľad svojich výsledkov.
+        </p>
+        
+        <div class="hero-actions-centered">
+            <a href="{% url 'login' %}" class="btn-hero-primary">🚀 Vstúpiť do aplikácie</a>
+        </div>
 
-    <div class="content">
-        {% block content %}
-        <h1>Vitajte v aplikácii Quiz</h1>
-        <p>Toto je základná šablóna bez externých knižníc.</p>
-        {% endblock %}
+        <div class="admin-link-wrapper">
+            <a href="/admin/" class="admin-link">⚙️ Administrácia</a>
+        </div>
     </div>
-
-    <footer>
-        <p>&copy; 2026 - Systém pre správu testov</p>
-    </footer>
-
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,17 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOgin</title>
-</head>
-<body>
-    <h2>Prihlásenie</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Prihlásiť sa</button>
-    </form>
+{% extends 'quiz/base.html' %}
+{% block title %}Prihlásenie{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-card">
         
-</body>
-</html>
+        <h1 class="login-title">Prihlásenie</h1>
+        <p class="login-subtitle">Vitajte späť! Prihláste sa do svojho účtu.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="django-form-styled">
+                {{ form.as_p }}
+            </div>
+            
+            <button type="submit" class="btn-login-submit">
+                🚀 Prihlásiť sa
+            </button>
+        </form>
+        
+    </div>
+</div>
+{% endblock %}

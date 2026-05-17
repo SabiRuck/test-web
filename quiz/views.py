@@ -15,6 +15,10 @@ def is_teacher_or_staff(user):
 # ── INDEX ──────────────────────────────────────────────────────
 
 def index(request):
+    # Ak už užívateľ je prihlásený, pošli ho na dashboard
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    # Ak nie je prihlásený, ukáž mu index.html, kde v lište bude svietiť "Prihlásiť sa"
     return render(request, 'quiz/index.html')
 
 
