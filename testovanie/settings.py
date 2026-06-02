@@ -25,8 +25,6 @@ SECRET_KEY = 'django-insecure-0l7vx@yzou#=4#nf*$j)!ebs$t3b2jk!41hd&%4j7zp!0r!=f3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -136,3 +134,5 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+ALLOWED_HOSTS = ['test-web-fsmn.onrender.com', '127.0.0.1', 'localhost']
