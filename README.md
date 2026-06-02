@@ -5,7 +5,7 @@ Moderná webová aplikácia postavená na frameworku **Python / Django** určen�
 Aplikácia je úspešne nasadená v produkčnom prostredí a dostupná online.
 
 ## 🔗 Produkčný odkaz (Online Demo)
-- **Živá aplikácia:** [SEM VLOŽTE LINK NAPR. https://eduapp.onrender.com] = TU DAJ LINK NA  
+- **Živá aplikácia:** https://test-web-fsmn.onrender.com/
 
 ## 🚀 Hlavné Funkcie (Features)
 - **Dashboard učiteľa:** Centrální rozbočovač, správa existujúcich testov a rýchle akcie
