@@ -54,11 +54,11 @@ class Test(models.Model):
     subject = models.CharField(max_length=100)
     time_limit = models.IntegerField(help_text="Limit v minútach")
     is_published = models.BooleanField(default=False)
-    
+    created_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='testy')
+
     # --- NOVÉ POLE PRE PRIRADENIE TRIED ---
     # Učiteľ môže vybrať viac tried pre jeden test
     assigned_classes = models.ManyToManyField(Trieda, related_name='tests', blank=True)
-
     questions = models.ManyToManyField(Question, related_name='tests', through='TestQuestion')
 
     def __str__(self):

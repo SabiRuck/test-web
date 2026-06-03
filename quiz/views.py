@@ -28,8 +28,11 @@ def dashboard(request):
     profil, _ = Profil.objects.get_or_create(user=request.user)
 
     if is_teacher_or_staff(request.user):
-        testy = Test.objects.prefetch_related('assigned_classes').all()
-        
+        if request.user.is_staff:
+            testy = Test.objects.prefetch_related('assigned_classes').all()
+        else:
+            testy = Test.objects.prefetch_related('assigned_classes').filter(created_by=request.user)
+
         publikovany_filter = request.GET.get('publikovany', '')
         trieda_filter = request.GET.get('trieda', '')
         predmet_filter = request.GET.get('predmet', '')
@@ -82,7 +85,10 @@ def vytvor_test(request):
     if request.method == 'POST':
         form = TestForm(request.POST)
         if form.is_valid():
-            test = form.save()
+            test = form.save(commit=False)
+            test.created_by = request.user
+            test.save()
+            form.save_m2m()
             return redirect('detail_testu', test_id=test.id)
     else:
         form = TestForm()

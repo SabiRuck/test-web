@@ -43,12 +43,13 @@
                 <th>Limit (min)</th>
                 <th>Triedy</th>
                 <th>Stav</th>
+                <th>Akcie</th>
             </tr>
         </thead>
         <tbody>
             {% for test in testy %}
             <tr>
-                <td><a href="{% url 'detail_testu' test.id %}">{{ test.title }}</a></td>
+                <td>{{ test.title }}</td>
                 <td>{{ test.subject }}</td>
                 <td>{{ test.time_limit }}</td>
                 <td>
@@ -62,10 +63,26 @@
                         <em>Koncept</em>
                     {% endif %}
                 </td>
+                <td>
+                    <a href="{% url 'detail_testu' test.id %}">📋 Detail</a>
+                    &nbsp;|&nbsp;
+                    <a href="{% url 'uprav_test' test.id %}">✏️ Upraviť</a>
+                    &nbsp;|&nbsp;
+                    <a href="{% url 'vysledky_testu' test.id %}">📊 Výsledky</a>
+                    &nbsp;|&nbsp;
+                    <form method="post" action="{% url 'prepni_stav_testu' test.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        {% if test.is_published %}
+                            <button type="submit">🔒 Skryť</button>
+                        {% else %}
+                            <button type="submit">🚀 Zverejniť</button>
+                        {% endif %}
+                    </form>
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5">Žiadne testy nevyhovujú filtru.</td>
+                <td colspan="6">Žiadne testy nevyhovujú filtru.</td>
             </tr>
             {% endfor %}
         </tbody>
