@@ -7,3 +7,5 @@
 ✅ Podľa publikácie — toto je skôr pre učiteľa, aby na dashboarde videl len zverejnené alebo len rozpracované testy. Teraz vidí všetky naraz bez filtra.
 žiak: filter podľa predmetu na jeho zozname testov
 ✅ prehľad výsledkov žiakov s filtrom podľa triedy/mena
+
+opravit css pre vytvaranie otazok do testov - pole pre text e male a pole pre zskrtnutie ci je odpoved spravna je az moc velke
