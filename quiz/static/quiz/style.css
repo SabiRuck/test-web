@@ -280,7 +280,7 @@ form[method="get"] input[type="text"], form[method="get"] select {
 }
 
 /* ==========================================================================
-   TABUĽKY A DÁTA (OPRAVA OKRAJOV, ZAROVNANIA A ČÍSLOVANIA)
+   TABUĽKY A DÁTA 
    ========================================================================== */
 table, table[border], table[style] {
     width: 100% !important;
@@ -343,7 +343,7 @@ td:first-child::after {
 }
 
 /* ==========================================================================
-   ŠTRUKTÚRY STRÁNOK (KARTY, ODZNAKY, ČASOVAČ)
+   ŠTRUKTÚRY STRÁNOK 
    ========================================================================== */
 .question-card, div[style*="border: 1px solid"], div[style*="border:1px solid"] {
     border: 1px solid var(--border) !important;
@@ -391,7 +391,7 @@ footer, .main-footer {
 }
 
 /* ==========================================================================
-   ŠPECIÁLNA SEKCIA: ÚVODNÁ STRÁNKA (INDEX.HTML)
+     ÚVODNÁ STRÁNKA (INDEX.HTML)
    ========================================================================== */
 .hero-section {
     text-align: center;
@@ -475,7 +475,7 @@ footer, .main-footer {
 }
 
 /* ==========================================================================
-   ŠPECIÁLNA SEKCIA: PRIHLÁSENIE (LOGIN.HTML)
+    PRIHLÁSENIE (LOGIN.HTML)
    ========================================================================== */
 .login-wrapper {
     max-width: 450px;
@@ -513,7 +513,7 @@ footer, .main-footer {
 }
 
 /* ==========================================================================
-            FINÁLNA OPRAVA: NAVIGÁCIA A SPODNÉ TLAČIDLÁ
+     NAVIGÁCIA A SPODNÉ TLAČIDLÁ
    ========================================================================== */
 
 /* 1. RESET GLOBÁLNYCH ZAROVNANÍ */
@@ -521,7 +521,6 @@ body, .content, .container {
     text-align: left !important;
 }
 
-/* 2. DOKONALÉ ZAROVNANIE A VÄČŠIE MEDZERY V NAVIGÁCII */
 nav, .main-nav {
     display: flex !important;
     flex-direction: row !important;
@@ -531,33 +530,30 @@ nav, .main-nav {
     text-align: left !important;
 }
 
-/* Úprava odkazu Dashboard/EduApp vľavo/v strede */
 nav a:first-of-type, .nav-logo a {
     display: inline-block !important;
     vertical-align: middle !important;
     margin: 0 !important;
-    padding: 8px 16px !important;        /* Základný priestor okolo odkazu pre pekné pozadie */
+    padding: 8px 16px !important;        
     border-radius: 8px !important;
     line-height: 1.2 !important;
     transition: all 0.2s ease-in-out !important; /* Plynulý prechod pre hover */
 }
 
-/* HOVER EFEKT PRE DASHBOARD / EDUAPP (Rozsvietenie a väčšie pozadie) */
+/* HOVER EFEKT PRE DASHBOARD / EDUAPP */
 nav a:first-of-type:hover, .nav-logo a:hover {
-    background-color: var(--primary-light) !important; /* Jemné svetlofialové pozadie */
-    box-shadow: 0 0 12px rgba(79, 70, 229, 0.2) !important; /* Elegantné rozsvietenie okolo */
+    background-color: var(--primary-light) !important; 
+    box-shadow: 0 0 12px rgba(79, 70, 229, 0.2) !important; 
     text-decoration: none !important;
 }
 
-/* Obalový prvok pre pravú stranu (Meno + Odhlásenie) - stabilný flexbox */
 .nav-links {
     display: flex !important;
     align-items: center !important;
-    gap: 28px !important;                /* Ešte o niečo väčšia medzera medzi menom a odhlásením */
+    gap: 28px !important;               
     white-space: nowrap !important;
 }
 
-/* ABSOLÚTNE ZAROVNANIE TLAČIDLA ODHLÁSIŤ SA DO ROVINY */
 .logout-form {
     display: inline-flex !important;
     align-items: center !important;
@@ -579,27 +575,21 @@ nav a:first-of-type:hover, .nav-logo a:hover {
     cursor: pointer !important;
     line-height: 1 !important;
     
-    /* Plynulý prechod pre farbu, pozadie a neónové rozsvietenie */
     transition: all 0.2s ease-in-out !important; 
     
-    /* KLÚČOVÁ ZMENA: Posunieme tlačidlo o 2px nižšie, aby bolo presne na osi s okolitým textom */
     transform: translateY(2px) !important; 
 }
 
-/* NOVÉ ČERVENÉ ROZSVIETENIE A ČERVENÝ BACKGROUND PRE ODHLÁSENIE */
 .btn-logout:hover {
-    color: var(--danger) !important;               /* Text sa zmení na výraznú červenú */
-    background-color: var(--danger-bg) !important; /* Aktivuje sa jemné červené pozadie */
+    color: var(--danger) !important;               
+    background-color: var(--danger-bg) !important; 
     border-radius: 6px !important;
     
-    /* Výrazný glow efekt (neónové rozsvietenie okolo tlačidla) do červenej farby */
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.5) !important; 
     
-    /* Pri hover efekte zachováme posun, aby tlačidlo neposkočilo */
     transform: translateY(2px) !important; 
 }
 
-/* Odkaz "Späť na dashboard" pod navigáciou bezpečne vľavo */
 a[href*="dashboard"] {
     display: inline-block !important;
     text-align: left !important;
@@ -607,8 +597,6 @@ a[href*="dashboard"] {
     margin-bottom: 24px !important;
 }
 
-
-/* 3. CENTROVANIE: Tlačidlá na akcie testu na stred stránky */
 a[href*="vytvor_otazku"],
 a[href*="banka_otazok"],
 a[href*="uprav_test"],
@@ -618,7 +606,6 @@ a[href*="vysledky_testu"] {
     margin: 6px !important;
 }
 
-/* Centrovanie kontajnera s tlačidlami pod tabuľkou */
 .content > form, 
 .content > div:last-of-type {
     text-align: center !important;
@@ -627,7 +614,7 @@ a[href*="vysledky_testu"] {
 
 /* 4. FAREBNOSŤ TLAČIDIEL */
 
-/* Druhé tlačidlo (Banka) -> Zelené */
+/* Druhé tlačidlo (Banka) -> Zelené 
 a[href*="banka_otazok"] button {
     background-color: var(--success) !important;
     color: white !important;
@@ -638,7 +625,7 @@ a[href*="banka_otazok"] button:hover {
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
 }
 
-/* Tretie tlačidlo (Nastavenia) -> Žlté */
+/* Tretie tlačidlo (Nastavenia) -> Žlté
 a[href*="uprav_test"] button[style*="background-color"],
 a[href*="uprav_test"] button {
     background-color: #f59e0b !important;
@@ -650,7 +637,7 @@ a[href*="uprav_test"] button:hover {
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
 }
 
-/* Štvrté tlačidlo (Výsledky) -> Tyrkysové/Modré */
+/* Štvrté tlačidlo (Výsledky) -> Tyrkysové/Modré 
 a[href*="vysledky_testu"] button[style*="background-color"],
 a[href*="vysledky_testu"] button {
     background-color: #17a2b8 !important;
@@ -660,14 +647,14 @@ a[href*="vysledky_testu"] button {
 a[href*="vysledky_testu"] button:hover {
     background-color: #117a8b !important;
     box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3) !important;
-}
+}*/
 
 form p textarea,
 form p textarea[name="text"],
 #id_text {
     width: 100% !important;
     max-width: 750px !important;
-    height: 120px !important;           /* Poriadna výška na text otázky */
+    height: 120px !important;           
     padding: 12px !important;
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     font-size: 1.05rem !important;
@@ -703,81 +690,71 @@ form p input[name$="-text"] {
     box-sizing: border-box !important;
 }
 
-/* 4. DRASTICKÉ ZMENŠENIE A ZAFRAZOVANIE ZAŠKRTÁVACIEHO POLÍČKA (Is correct) */
 table td input[type="checkbox"],
 form p input[type="checkbox"],
 input[type="checkbox"][name$="-is_correct"] {
-    width: 20px !important;             /* Absolútne natvrdo malá šírka */
-    height: 20px !important;            /* Absolútne natvrdo malá výška */
+    width: 20px !important;             
+    height: 20px !important;            
     max-width: 20px !important;
     max-height: 20px !important;
     min-width: 20px !important;
     min-height: 20px !important;
-    display: inline-block !important;   /* Zakážeme akékoľvek riadkové rozťahovanie */
-    appearance: auto !important;        /* Vynúti natívny vzhľad malého prehliadačového štvorčeka */
+    display: inline-block !important;   
+    appearance: auto !important;      
     -webkit-appearance: checkbox !important;
     -moz-appearance: checkbox !important;
-    margin: 0 auto !important;          /* Vycentrovanie v stĺpci */
+    margin: 0 auto !important;         
     padding: 0 !important;
-    box-shadow: none !important;        /* Odstránenie akéhokoľvek glow efektu, ktorý by ho zväčšoval */
+    box-shadow: none !important;       
     cursor: pointer !important;
 }
 
-/* Úprava celej bunky tabuľky, kde je checkbox, aby ho nerozťahovala */
 table td:last-child, 
 table th:last-child {
-    width: 80px !important;             /* Celý stĺpec "Správna?" bude mať len 80px */
+    width: 80px !important;            
     text-align: center !important;
     vertical-align: middle !important;
 }
 
-/* Vyčistíme bunku s akciami a zoradíme prvky pekne do riadku vedľa seba */
 td:last-child {
     display: flex !important;
     flex-wrap: wrap !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 12px !important;            /* Medzera medzi ikonkami namiesto čiar */
+    gap: 12px !important;           
     padding: 10px !important;
-    min-width: 220px !important;     /* Roztiahne stĺpec, aby sa všetko zmestilo */
+    min-width: 220px !important;     
 }
 
-/* Skryjeme textové čiary "|" natvrdo zapísané v HTML */
 td:last-child {
-    font-size: 0 !important;         /* Skryje samotný textový odpad (písmená aj čiary) */
+    font-size: 0 !important;        
     color: transparent !important;
 }
 
-/* Vrátime veľkosť písma a farbu iba odkazom a tlačidlám */
 td:last-child a, 
 td:last-child form,
 td:last-child button {
-    font-size: 0.95rem !important;   /* Vráti normálnu veľkosť textu */
+    font-size: 0.95rem !important;  
     display: inline-flex !important;
     align-items: center !important;
     text-decoration: none !important;
-    margin: 0 !important;            /* Vynuluje staré neplechy s okrajmi */
+    margin: 0 !important;            
 }
 
-/* Jemný hover efekt na textové odkazy (Detail, Upraviť, Výsledky) */
 td:last-child a:hover {
     transform: translateY(-1px);
     opacity: 0.8;
 }
 
-/* Oprava pre tlačidlo Zverejniť, aby v riadku nevyzeralo obrovské */
 td:last-child button, 
 td:last-child form button {
-    padding: 6px 12px !important;    /* Kompaktnejšie gombíky do tabuľky */
+    padding: 6px 12px !important;    
     font-size: 0.85rem !important;
     margin: 0 !important;
 }
 
-/* ==========================================================================
-   OPRAVA PRE PRÁZDNY STAV A VÝSLEDKY ŠTUDENTA
-   ========================================================================== */
 
-/* Štýlový box, ak študent nemá žiadne testy */
+/*  box, ak študent nemá žiadne testy */
 .empty-state-box {
     background-color: var(--bg-app);
     border: 1px dashed var(--border);
