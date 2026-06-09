@@ -13,15 +13,15 @@
 {% if vsetky_otazky %}
 <table border="1" cellpadding="6">
     <thead>
-        <tr><th>Otázka</th><th>Typ</th><th>Body</th><th>Odpovede (správna tučne)</th><th>Akcia</th></tr>
+        <tr><th>Otázka</th><th>Body</th><th>Odpovede (správna tučne)</th><th>Akcia</th></tr>
     </thead>
     <tbody>
         {% for otazka in vsetky_otazky %}
         <tr {% if otazka.id in uz_pridane_ids %}style="background:#e8f5e9;"{% endif %}>
             <td>{{ otazka.text }}</td>
-            <td>{{ otazka.get_type_display }}</td>
             <td>{{ otazka.points }}</td>
             <td>
+                <p style="font-size:0.85em; color: var(--text-muted); margin-bottom:6px; font-style:italic;">{{ otazka.text }}</p>
                 <ul style="margin:0; padding-left:16px;">
                 {% for answer in otazka.answers.all %}
                     <li>{% if answer.is_correct %}<strong style="color:green">{{ answer.text }} ✓</strong>{% else %}{{ answer.text }}{% endif %}</li>

@@ -244,6 +244,17 @@ def zarad_ziaka(request, profil_id):
     return redirect('sprava_tried')
 
 @login_required
+def zmaz_test(request, test_id):
+    if not is_teacher_or_staff(request.user):
+        return redirect('index')
+    test = get_object_or_404(Test, id=test_id)
+    if not request.user.is_staff and test.created_by != request.user:
+        return redirect('dashboard')
+    if request.method == 'POST':
+        test.delete()
+    return redirect('dashboard')
+
+@login_required
 def prepni_stav_testu(request, test_id):
     if not is_teacher_or_staff(request.user):
         return redirect('index')
@@ -379,30 +390,40 @@ def spustit_test(request, test_id):
 def detail_vysledku(request, result_id):
     vysledok = get_object_or_404(Result, id=result_id, user=request.user)
     
-    # Získame všetky odpovede študenta naraz
-    odpovede_studenta = StudentResponse.objects.filter(result=vysledok).select_related('selected_answer')
+    odpovede_studenta = StudentResponse.objects.filter(result=vysledok).select_related('selected_answer', 'question')
     
-    # Vytvoríme si mapu {question_id: selected_answer_object}
-    mapa_odpovedi = {resp.question_id: resp.selected_answer for resp in odpovede_studenta}
+    mapa_odpovedi = {}
+    for resp in odpovede_studenta:
+        qid = resp.question_id
+        if qid not in mapa_odpovedi:
+            mapa_odpovedi[qid] = set()
+        mapa_odpovedi[qid].add(resp.selected_answer_id)
 
     test_otazky = TestQuestion.objects.filter(test=vysledok.test).select_related('question').order_by('order')
 
     for tq in test_otazky:
         otazka = tq.question
-        odpoved_obj = mapa_odpovedi.get(otazka.id) # Čo reálne študent "odovzdal"
+        vybrane_ids = mapa_odpovedi.get(otazka.id, set())
 
         if otazka.type == 'TXT':
-            if odpoved_obj:
-                otazka.student_text = odpoved_obj.text
-                otazka.is_correct_txt = odpoved_obj.is_correct
+            if vybrane_ids:
+                ans_id = next(iter(vybrane_ids))
+                odpoved_obj = Answer.objects.filter(id=ans_id).first()
+                if odpoved_obj:
+                    otazka.student_text = odpoved_obj.text
+                    otazka.is_correct_txt = odpoved_obj.is_correct
+                else:
+                    otazka.student_text = "(žiadna)"
+                    otazka.is_correct_txt = False
             else:
                 otazka.student_text = "(žiadna)"
                 otazka.is_correct_txt = False
         else:
-            # Pre SC a MC (ideme cez všetky Answer otázky)
-            vybrane_ids = odpovede_studenta.filter(question=otazka).values_list('selected_answer_id', flat=True)
-            for ans in otazka.answers.all():
+            # Načítame raz do listu, nastavíme is_selected, uložíme na otázku
+            odpovede = list(otazka.answers.all())
+            for ans in odpovede:
                 ans.is_selected = ans.id in vybrane_ids
+            otazka.odpovede_so_stavom = odpovede
 
     return render(request, 'quiz/detail_vysledku.html', {
         'vysledok': vysledok,

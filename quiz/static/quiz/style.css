@@ -1,34 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap');
 
 :root {
-    --primary: #4f46e5;          /* Moderná indigo modrá */
+    --primary: #4f46e5;
     --primary-hover: #4338ca;
     --primary-light: #f5f3ff;
-    --bg-app: #f8fafc;           /* Čisté svetlé pozadie */
-    --surface: #ffffff;          /* Biela pre panely a karty */
-    --text-main: #0f172a;        /* Tmavá pre skvelú čitateľnosť */
-    --text-muted: #64748b;       /* Sivá pre popisy */
-    --border: #e2e8f0;           /* Jednotná tenká elegantná linka */
-    
-    /* Stavy */
-    --success: #10b981;          /* Zelená */
+    --bg-app: #f8fafc;
+    --surface: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --success: #10b981;
     --success-bg: #ecfdf5;
-    --danger: #ef4444;           /* Červená */
+    --danger: #ef4444;
     --danger-bg: #fef2f2;
-    --warning: #f59e0b;          /* Oranžová */
+    --warning: #f59e0b;
     --warning-bg: #fffbeb;
-    
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
     --radius: 12px;
 }
 
-/* Reset a základ */
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
@@ -41,12 +33,12 @@ body {
 }
 
 /* ==========================================================================
-   NAVIGÁCIA A LIŠTY
+   NAVIGÁCIA
    ========================================================================== */
 nav, .main-nav {
     background-color: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 16px 40px;
+    padding: 24px 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -58,12 +50,23 @@ nav, .main-nav {
     color: var(--primary) !important;
     font-size: 1.2rem;
     text-decoration: none;
+    display: inline-block !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
-.nav-links { 
-    display: flex; 
-    align-items: center; 
-    gap: 15px; 
+nav a:first-of-type:hover, .nav-logo a:hover {
+    background-color: var(--primary-light) !important;
+    box-shadow: 0 0 12px rgba(79, 70, 229, 0.2) !important;
+    text-decoration: none !important;
+}
+
+.nav-links {
+    display: flex !important;
+    align-items: center !important;
+    gap: 28px !important;
+    white-space: nowrap !important;
 }
 
 nav a, .nav-links a {
@@ -81,29 +84,39 @@ nav a:hover, .nav-links a:hover {
     background-color: var(--primary-light);
 }
 
-/* Odhlásenie v menu */
 .logout-form {
-    display: inline-block;
-    margin: 0;
+    display: inline-flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
+
 .btn-logout {
+    display: inline-flex !important;
+    align-items: center !important;
     background: none !important;
     color: var(--text-muted) !important;
     border: none !important;
     box-shadow: none !important;
-    padding: 8px 16px !important;
+    padding: 6px 12px !important;
     font-size: 0.95rem !important;
     font-weight: 600 !important;
     margin: 0 !important;
+    cursor: pointer !important;
+    transform: translateY(2px) !important;
+    transition: all 0.2s ease-in-out !important;
 }
+
 .btn-logout:hover {
     color: var(--danger) !important;
     background-color: var(--danger-bg) !important;
-    transform: none !important;
+    border-radius: 6px !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5) !important;
+    transform: translateY(2px) !important;
 }
 
 /* ==========================================================================
-   HLAVNÉ ROZVRHNUTIE A KONTAJNERY
+   HLAVNÉ ROZVRHNUTIE
    ========================================================================== */
 .content, .container {
     flex: 1;
@@ -115,23 +128,22 @@ nav a:hover, .nav-links a:hover {
     border-radius: var(--radius);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-md);
+    text-align: left !important;
 }
 
-/* Typografia */
+body, .content, .container { text-align: left !important; }
+
 h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 24px; }
 h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-top: 30px; margin-bottom: 16px; }
 h3 { font-size: 1.25rem; font-weight: 700; margin-top: 24px; margin-bottom: 12px; }
 p { color: var(--text-muted); margin-bottom: 16px; }
 hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0; }
-
 a { color: var(--primary); text-decoration: none; font-weight: 600; }
 a:hover { text-decoration: underline; }
 
 /* ==========================================================================
-   TLAČIDLÁ A AKCIE
+   TLAČIDLÁ
    ========================================================================== */
-
-/* Spoločný základ pre úplne všetky tlačidlá */
 button, input[type="submit"], .btn-hero-primary {
     display: inline-flex;
     align-items: center;
@@ -146,15 +158,12 @@ button, input[type="submit"], .btn-hero-primary {
     font-family: inherit;
     transition: all 0.2s ease;
     box-shadow: var(--shadow-sm);
-    margin-right: 10px;        
+    margin-right: 10px;
     margin-bottom: 10px;
 }
 
-button:last-child {
-    margin-right: 0;
-}
+button:last-child { margin-right: 0; }
 
-/* 1. Primárne tlačidlá (Hlavná akcia - plná fialová) */
 button, input[type="submit"] {
     background-color: var(--primary);
     color: white;
@@ -166,7 +175,6 @@ button:hover, input[type="submit"]:hover {
     transform: translateY(-1px);
 }
 
-/* Prepnúť stav testu (Skryť/Zverejniť) navrchu stránky zostáva neutrálne bielo-sivé */
 form[action*="prepni_stav_testu"] button {
     background-color: #ffffff !important;
     color: var(--text-muted) !important;
@@ -180,10 +188,8 @@ form[action*="prepni_stav_testu"] button:hover {
     border-color: var(--text-muted) !important;
 }
 
-/* 2. Sekundárne tlačidlá (Odkazy na iné stránky, úpravy, hľadanie v banke - bielo-fialové) */
-/* PRIDANÉ: Ak je tlačidlo vo vnútri odkazu <a> (ako banka otázok), alebo obsahuje text "banka" / "Upraviť" */
-a button, 
-button[class*="secondary"], 
+a button,
+button[class*="secondary"],
 a[href*="banka"] button,
 a[href*="uprav"] button,
 button:not([type="submit"]):not([onclick*="confirm"]):not(.btn-logout):not([formaction*="prepni"]) {
@@ -193,7 +199,7 @@ button:not([type="submit"]):not([onclick*="confirm"]):not(.btn-logout):not([form
     box-shadow: none !important;
 }
 
-a button:hover, 
+a button:hover,
 a[href*="banka"] button:hover,
 a[href*="uprav"] button:hover,
 button:not([type="submit"]):not([onclick*="confirm"]):not(.btn-logout):not([formaction*="prepni"]):hover {
@@ -203,7 +209,6 @@ button:not([type="submit"]):not([onclick*="confirm"]):not(.btn-logout):not([form
     transform: translateY(-1px);
 }
 
-/* Výnimka pre vytváranie: ak je tlačidlo na vytvorenie otázky v odkaze, chceme ho nechať fialové */
 a[href*="vytvor_otazku"] button, a[href*="vytvor_test"] button {
     background-color: var(--primary) !important;
     color: white !important;
@@ -213,7 +218,6 @@ a[href*="vytvor_otazku"] button:hover, a[href*="vytvor_test"] button:hover {
     background-color: var(--primary-hover) !important;
 }
 
-/* 3. Nebezpečné / Mazacie tlačidlá (Jemná červená) */
 button[onclick*="confirm"], button[class*="danger"], form[action*="zmaz"] button {
     background-color: var(--danger-bg) !important;
     color: var(--danger) !important;
@@ -229,6 +233,23 @@ button[onclick*="confirm"]:hover, form[action*="zmaz"] button:hover {
     transform: translateY(-1px);
 }
 
+.btn-danger-small {
+    background-color: var(--danger-bg) !important;
+    color: var(--danger) !important;
+    border: 1px solid var(--danger) !important;
+    padding: 4px 10px !important;
+    font-size: 0.82rem !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-danger-small:hover {
+    background-color: var(--danger) !important;
+    color: #fff !important;
+}
+
 td form, .display-inline {
     display: inline-block;
     margin: 0;
@@ -237,7 +258,7 @@ td form, .display-inline {
 }
 
 /* ==========================================================================
-   FORMULÁRE, FILTRE A VYHĽADÁVANIE
+   FORMULÁRE
    ========================================================================== */
 form p { margin-bottom: 16px; }
 form label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; }
@@ -279,17 +300,70 @@ form[method="get"] input[type="text"], form[method="get"] select {
     min-width: 180px;
 }
 
+form p textarea, form p textarea[name="text"], #id_text {
+    width: 100% !important;
+    max-width: 750px !important;
+    height: 120px !important;
+    padding: 12px !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1.05rem !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+    resize: vertical !important;
+    display: block !important;
+}
+
+form p select[name="type"], form p select[name="points"], #id_type, #id_points {
+    width: 100% !important;
+    max-width: 250px !important;
+    padding: 10px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    background-color: #fff !important;
+}
+
+table input[type="text"], form p input[name$="-text"] {
+    width: 100% !important;
+    max-width: 450px !important;
+    padding: 8px 12px !important;
+    font-family: inherit !important;
+    font-size: 0.95rem !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+}
+
+table td input[type="checkbox"],
+form p input[type="checkbox"],
+input[type="checkbox"][name$="-is_correct"] {
+    width: 20px !important;
+    height: 20px !important;
+    max-width: 20px !important;
+    max-height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    display: inline-block !important;
+    appearance: auto !important;
+    -webkit-appearance: checkbox !important;
+    -moz-appearance: checkbox !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+}
+
 /* ==========================================================================
-   TABUĽKY A DÁTA 
+   TABUĽKY
    ========================================================================== */
 table, table[border], table[style] {
     width: 100% !important;
-    border-collapse: collapse !important; 
+    border-collapse: collapse !important;
     margin: 20px 0 30px 0 !important;
     border-radius: 8px !important;
     overflow: hidden !important;
     border: 1px solid var(--border) !important;
-    counter-reset: rowCounter; 
+    counter-reset: rowCounter;
 }
 
 th {
@@ -300,36 +374,30 @@ th {
     font-size: 0.75rem !important;
     letter-spacing: 0.05em !important;
     padding: 14px 20px !important;
-    border: 1px solid var(--border) !important; 
-    text-align: center !important; 
+    border: 1px solid var(--border) !important;
+    text-align: center !important;
 }
 
 td {
     padding: 16px 20px !important;
-    border: 1px solid var(--border) !important; 
+    border: 1px solid var(--border) !important;
     background-color: #fff !important;
     vertical-align: middle !important;
 }
 
-tr:hover td {
-    background-color: #f1f5f9 !important;
-}
+tr:hover td { background-color: #f1f5f9 !important; }
 
-/* AUTOMATICKÉ ČÍSLOVANIE */
-tbody tr {
-    counter-increment: rowCounter; 
-}
+/* AUTOMATICKÉ ČÍSLOVANIE - prvý stĺpec */
+tbody tr { counter-increment: rowCounter; }
 
 th:first-child {
     font-size: 0 !important;
     color: transparent !important;
 }
-th:first-child::after {
-    content: '' !important;
-}
+th:first-child::after { content: '' !important; }
 
 td:first-child {
-    font-size: 0 !important; 
+    font-size: 0 !important;
     color: transparent !important;
     text-align: center !important;
     font-weight: 700 !important;
@@ -337,13 +405,54 @@ td:first-child {
 }
 
 td:first-child::after {
-    content: counter(rowCounter) !important; 
+    content: counter(rowCounter) !important;
     font-size: 0.95rem !important;
     color: var(--text-muted) !important;
 }
 
+/* POSLEDNÝ STĹPEC - len pre tabuľky s akciami (action-table) */
+table.action-table td:last-child,
+table.action-table th:last-child {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+table.action-table td:last-child {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 10px !important;
+    min-width: 200px !important;
+    font-size: 0.95rem !important;
+    color: var(--text-main) !important;
+}
+
+table.action-table td:last-child a,
+table.action-table td:last-child form,
+table.action-table td:last-child button {
+    font-size: 0.95rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
+    margin: 0 !important;
+}
+
+table.action-table td:last-child a:hover {
+    transform: translateY(-1px);
+    opacity: 0.8;
+}
+
+table.action-table td:last-child button,
+table.action-table td:last-child form button {
+    padding: 6px 12px !important;
+    font-size: 0.85rem !important;
+    margin: 0 !important;
+}
+
 /* ==========================================================================
-   ŠTRUKTÚRY STRÁNOK 
+   ŠTRUKTÚRY STRÁNOK
    ========================================================================== */
 .question-card, div[style*="border: 1px solid"], div[style*="border:1px solid"] {
     border: 1px solid var(--border) !important;
@@ -391,7 +500,7 @@ footer, .main-footer {
 }
 
 /* ==========================================================================
-     ÚVODNÁ STRÁNKA (INDEX.HTML)
+   ÚVODNÁ STRÁNKA
    ========================================================================== */
 .hero-section {
     text-align: center;
@@ -401,10 +510,7 @@ footer, .main-footer {
     margin-bottom: 20px;
 }
 
-.hero-content {
-    max-width: 700px;
-    margin: 0 auto;
-}
+.hero-content { max-width: 700px; margin: 0 auto; }
 
 .hero-badge {
     display: inline-block;
@@ -418,18 +524,8 @@ footer, .main-footer {
     border: 1px solid rgba(79, 70, 229, 0.2);
 }
 
-.hero-title {
-    font-size: 2.8rem;
-    line-height: 1.2;
-    color: var(--text-main);
-    margin-bottom: 20px;
-}
-
-.hero-description {
-    font-size: 1.15rem;
-    color: var(--text-muted);
-    margin-bottom: 32px;
-}
+.hero-title { font-size: 2.8rem; line-height: 1.2; color: var(--text-main); margin-bottom: 20px; }
+.hero-description { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 32px; }
 
 .hero-actions-centered {
     display: flex;
@@ -457,9 +553,7 @@ footer, .main-footer {
     text-decoration: none;
 }
 
-.admin-link-wrapper {
-    text-align: center;
-}
+.admin-link-wrapper { text-align: center; }
 
 .admin-link {
     color: var(--text-muted);
@@ -469,19 +563,12 @@ footer, .main-footer {
     transition: color 0.2s ease;
 }
 
-.admin-link:hover {
-    color: var(--primary);
-    text-decoration: underline;
-}
+.admin-link:hover { color: var(--primary); text-decoration: underline; }
 
 /* ==========================================================================
-    PRIHLÁSENIE (LOGIN.HTML)
+   PRIHLÁSENIE
    ========================================================================== */
-.login-wrapper {
-    max-width: 450px;
-    margin: 60px auto;
-    padding: 10px;
-}
+.login-wrapper { max-width: 450px; margin: 60px auto; padding: 10px; }
 
 .login-card {
     background: var(--surface);
@@ -491,16 +578,8 @@ footer, .main-footer {
     box-shadow: var(--shadow-md);
 }
 
-.login-title {
-    text-align: center;
-    margin-bottom: 8px;
-}
-
-.login-subtitle {
-    text-align: center;
-    margin-bottom: 32px;
-    color: var(--text-muted);
-}
+.login-title { text-align: center; margin-bottom: 8px; }
+.login-subtitle { text-align: center; margin-bottom: 32px; color: var(--text-muted); }
 
 .btn-login-submit {
     width: 100%;
@@ -513,84 +592,10 @@ footer, .main-footer {
 }
 
 /* ==========================================================================
-     NAVIGÁCIA A SPODNÉ TLAČIDLÁ
+   NAVIGAČNÉ ODKAZY
    ========================================================================== */
-
-/* 1. RESET GLOBÁLNYCH ZAROVNANÍ */
-body, .content, .container {
-    text-align: left !important;
-}
-
-nav, .main-nav {
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: center !important;      /* Vertikálne vycentrovanie celej lišty */
-    padding: 24px 40px !important;       /* Väčší priestor zhora a zdola */
-    text-align: left !important;
-}
-
-nav a:first-of-type, .nav-logo a {
-    display: inline-block !important;
-    vertical-align: middle !important;
-    margin: 0 !important;
-    padding: 8px 16px !important;        
-    border-radius: 8px !important;
-    line-height: 1.2 !important;
-    transition: all 0.2s ease-in-out !important; /* Plynulý prechod pre hover */
-}
-
-/* HOVER EFEKT PRE DASHBOARD / EDUAPP */
-nav a:first-of-type:hover, .nav-logo a:hover {
-    background-color: var(--primary-light) !important; 
-    box-shadow: 0 0 12px rgba(79, 70, 229, 0.2) !important; 
-    text-decoration: none !important;
-}
-
-.nav-links {
-    display: flex !important;
-    align-items: center !important;
-    gap: 28px !important;               
-    white-space: nowrap !important;
-}
-
-.logout-form {
-    display: inline-flex !important;
-    align-items: center !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.btn-logout {
-    display: inline-flex !important;
-    align-items: center !important;
-    background: none !important;
-    color: var(--text-muted) !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 6px 12px !important;        
-    font-size: 0.95rem !important;
-    font-weight: 600 !important;
-    margin: 0 !important;
-    cursor: pointer !important;
-    line-height: 1 !important;
-    
-    transition: all 0.2s ease-in-out !important; 
-    
-    transform: translateY(2px) !important; 
-}
-
-.btn-logout:hover {
-    color: var(--danger) !important;               
-    background-color: var(--danger-bg) !important; 
-    border-radius: 6px !important;
-    
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5) !important; 
-    
-    transform: translateY(2px) !important; 
-}
-
-a[href*="dashboard"] {
+.content a[href*="dashboard"],
+.container a[href*="dashboard"] {
     display: inline-block !important;
     text-align: left !important;
     width: auto !important;
@@ -606,155 +611,9 @@ a[href*="vysledky_testu"] {
     margin: 6px !important;
 }
 
-.content > form, 
-.content > div:last-of-type {
-    text-align: center !important;
-}
-
-
-/* 4. FAREBNOSŤ TLAČIDIEL */
-
-/* Druhé tlačidlo (Banka) -> Zelené 
-a[href*="banka_otazok"] button {
-    background-color: var(--success) !important;
-    color: white !important;
-    border: none !important;
-}
-a[href*="banka_otazok"] button:hover {
-    background-color: #059669 !important;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
-}
-
-/* Tretie tlačidlo (Nastavenia) -> Žlté
-a[href*="uprav_test"] button[style*="background-color"],
-a[href*="uprav_test"] button {
-    background-color: #f59e0b !important;
-    color: white !important;
-    border: none !important;
-}
-a[href*="uprav_test"] button:hover {
-    background-color: #d97706 !important;
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
-}
-
-/* Štvrté tlačidlo (Výsledky) -> Tyrkysové/Modré 
-a[href*="vysledky_testu"] button[style*="background-color"],
-a[href*="vysledky_testu"] button {
-    background-color: #17a2b8 !important;
-    color: white !important;
-    border: none !important;
-}
-a[href*="vysledky_testu"] button:hover {
-    background-color: #117a8b !important;
-    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3) !important;
-}*/
-
-form p textarea,
-form p textarea[name="text"],
-#id_text {
-    width: 100% !important;
-    max-width: 750px !important;
-    height: 120px !important;           
-    padding: 12px !important;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    font-size: 1.05rem !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 6px !important;
-    box-sizing: border-box !important;
-    resize: vertical !important;
-    display: block !important;
-}
-
-/* 2. Výber typu otázky a bodov */
-form p select[name="type"],
-form p select[name="points"],
-#id_type, #id_points {
-    width: 100% !important;
-    max-width: 250px !important;
-    padding: 10px !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 6px !important;
-    background-color: #fff !important;
-}
-
-/* 3. Textové políčka pre samotný text odpovedí v tabuľke */
-table input[type="text"],
-form p input[name$="-text"] {
-    width: 100% !important;
-    max-width: 450px !important;
-    padding: 8px 12px !important;
-    font-family: inherit !important;
-    font-size: 0.95rem !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 6px !important;
-    box-sizing: border-box !important;
-}
-
-table td input[type="checkbox"],
-form p input[type="checkbox"],
-input[type="checkbox"][name$="-is_correct"] {
-    width: 20px !important;             
-    height: 20px !important;            
-    max-width: 20px !important;
-    max-height: 20px !important;
-    min-width: 20px !important;
-    min-height: 20px !important;
-    display: inline-block !important;   
-    appearance: auto !important;      
-    -webkit-appearance: checkbox !important;
-    -moz-appearance: checkbox !important;
-    margin: 0 auto !important;         
-    padding: 0 !important;
-    box-shadow: none !important;       
-    cursor: pointer !important;
-}
-
-table td:last-child, 
-table th:last-child {
-    width: 80px !important;            
-    text-align: center !important;
-    vertical-align: middle !important;
-}
-
-td:last-child {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 12px !important;           
-    padding: 10px !important;
-    min-width: 220px !important;     
-}
-
-td:last-child {
-    font-size: 0 !important;        
-    color: transparent !important;
-}
-
-td:last-child a, 
-td:last-child form,
-td:last-child button {
-    font-size: 0.95rem !important;  
-    display: inline-flex !important;
-    align-items: center !important;
-    text-decoration: none !important;
-    margin: 0 !important;            
-}
-
-td:last-child a:hover {
-    transform: translateY(-1px);
-    opacity: 0.8;
-}
-
-td:last-child button, 
-td:last-child form button {
-    padding: 6px 12px !important;    
-    font-size: 0.85rem !important;
-    margin: 0 !important;
-}
-
-
-/*  box, ak študent nemá žiadne testy */
+/* ==========================================================================
+   PRÁZDNY STAV
+   ========================================================================== */
 .empty-state-box {
     background-color: var(--bg-app);
     border: 1px dashed var(--border);
@@ -764,38 +623,4 @@ td:last-child form button {
     margin: 20px 0;
 }
 
-.empty-state-box p {
-    color: var(--text-muted);
-    font-size: 1rem;
-    font-weight: 500;
-    margin: 0;
-}
-
-/* Zapnutie číslovania výhradne pre tabuľku študentských výsledkov */
-table.student-results-table {
-    counter-reset: rowCounter !important;
-}
-
-table.student-results-table tbody tr {
-    counter-increment: rowCounter !important;
-}
-
-table.student-results-table th:first-child {
-    font-size: 0 !important;
-    color: transparent !important;
-    width: 50px !important;
-}
-
-table.student-results-table td:first-child {
-    font-size: 0 !important; 
-    color: transparent !important;
-    text-align: center !important;
-    font-weight: 700 !important;
-    width: 50px !important;
-}
-
-table.student-results-table td:first-child::after {
-    content: counter(rowCounter) !important; 
-    font-size: 0.95rem !important;
-    color: var(--primary) !important;
-}
+.empty-state-box p { color: var(--text-muted); font-size: 1rem; font-weight: 500; margin: 0; }

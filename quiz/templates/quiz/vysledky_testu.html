@@ -23,24 +23,32 @@
 {% if not vysledky %}
     <p><em>Žiadny žiak nevyhovuje hľadaniu.</em></p>
 {% else %}
-<table>
-    <tr>
-        <th>Žiak</th>
-        <th>Trieda</th>
-        <th>Body</th>
-        <th>%</th>
-        <th>Dátum</th>
-    </tr>
+<table style="counter-reset: none;">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Meno žiaka</th>
+            <th>Používateľské meno</th>
+            <th>Trieda</th>
+            <th>Body</th>
+            <th>%</th>
+            <th>Dátum</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for v in vysledky %}
     <tr>
-        <td>{{ v.user.get_full_name|default:v.user.username }}</td>
-        <td>{{ v.user.profil.trieda }}</td>
+        <td>{{ forloop.counter }}</td>
+        <td><strong>{{ v.user.get_full_name|default:"—" }}</strong></td>
+        <td style="color: var(--text-muted); font-size:0.9em;">{{ v.user.username }}</td>
+        <td>{{ v.user.profil.trieda|default:"—" }}</td>
         <td>{{ v.score }}</td>
-        <td>{{ v.percentage }}%</td>
-        <td>{{ v.completed_at|date:"d.m.Y" }}</td>
+        <td>{{ v.percentage|floatformat:1 }}%</td>
+        <td>{{ v.completed_at }}</td>
     </tr>
     {% endfor %}
+    </tbody>
 </table>
 {% endif %}
 
-{% endblock %}
+{% endblock %}%}

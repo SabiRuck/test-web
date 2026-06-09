@@ -78,6 +78,11 @@
                             <button type="submit">🚀 Zverejniť</button>
                         {% endif %}
                     </form>
+                    &nbsp;|&nbsp;
+                    <form method="post" action="{% url 'zmaz_test' test.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger-small" onclick="return confirm('Naozaj chceš vymazať test &quot;{{ test.title }}&quot;? Táto akcia sa nedá vrátiť.')">🗑 Vymazať</button>
+                    </form>
                 </td>
             </tr>
             {% empty %}

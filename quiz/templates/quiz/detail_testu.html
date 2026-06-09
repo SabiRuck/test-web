@@ -4,30 +4,32 @@
 <a href="{% url 'dashboard' %}">← Späť na dashboard</a>
 <h1>{{ test.title }}</h1>
 
-<table border="0" cellpadding="4">
-    <tr><td><strong>Predmet:</strong></td><td>{{ test.subject }}</td></tr>
-    <tr><td><strong>Popis:</strong></td><td>{{ test.description }}</td></tr>
-    <tr><td><strong>Čas. limit:</strong></td><td>{{ test.time_limit }} min</td></tr>
-    <tr><td><strong>Triedy:</strong></td><td>
-        {% for t in test.assigned_classes.all %}{{ t.nazov }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}
-    </td></tr>
-    <tr>
-        <td><strong>Stav:</strong></td>
-        <td>
-            {% if test.is_published %}
-                <strong style="color:green">✅ Zverejnený</strong>
-            {% else %}
-                <em style="color: gray;">Koncept (skrytý pre žiakov)</em>
-            {% endif %}
-            
-            <form method="post" action="{% url 'prepni_stav_testu' test.id %}" style="display:inline; margin-left: 10px;">
-                {% csrf_token %}
-                <button type="submit" style="font-size: 0.8em; cursor: pointer;">
-                    {% if test.is_published %} Skryť test (Koncept) {% else %} Zverejniť test teraz {% endif %}
-                </button>
-            </form>
-        </td>
-    </tr>
+<table border="0" cellpadding="4" style="width:auto;">
+    <tbody>
+        <tr><td><strong>Predmet:</strong></td><td>{{ test.subject }}</td></tr>
+        <tr><td><strong>Popis:</strong></td><td>{{ test.description }}</td></tr>
+        <tr><td><strong>Čas. limit:</strong></td><td>{{ test.time_limit }} min</td></tr>
+        <tr><td><strong>Triedy:</strong></td><td>
+            {% for t in test.assigned_classes.all %}{{ t.nazov }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}
+        </td></tr>
+        <tr>
+            <td><strong>Stav:</strong></td>
+            <td>
+                {% if test.is_published %}
+                    <strong style="color:green">✅ Zverejnený</strong>
+                {% else %}
+                    <em style="color: gray;">Koncept (skrytý pre žiakov)</em>
+                {% endif %}
+                
+                <form method="post" action="{% url 'prepni_stav_testu' test.id %}" style="display:inline; margin-left: 10px;">
+                    {% csrf_token %}
+                    <button type="submit" style="font-size: 0.8em; cursor: pointer;">
+                        {% if test.is_published %} Skryť test (Koncept) {% else %} Zverejniť test teraz {% endif %}
+                    </button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
 </table>
 <hr>
 <h2>Otázky v teste</h2>
