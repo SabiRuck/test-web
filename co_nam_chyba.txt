@@ -8,4 +8,4 @@
 žiak: filter podľa predmetu na jeho zozname testov
 ✅ prehľad výsledkov žiakov s filtrom podľa triedy/mena
 
-opravit css pre vytvaranie otazok do testov - pole pre text e male a pole pre zskrtnutie ci je odpoved spravna je az moc velke
+✅ opravit css pre vytvaranie otazok do testov - pole pre text e male a pole pre zskrtnutie ci je odpoved spravna je az moc velke

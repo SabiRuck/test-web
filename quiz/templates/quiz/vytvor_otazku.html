@@ -3,23 +3,39 @@
 {% block content %}
 <a href="{% url 'detail_testu' test.id %}">← Späť na test: {{ test.title }}</a>
 <h1>Vytvoriť novú otázku</h1>
+
 <form method="post">
     {% csrf_token %}
-    <h3>Otázka</h3>
-    {{ q_form.as_p }}
+    
+    <div class="django-form-styled">
+        <h3>Otázka</h3>
+        {{ q_form.as_p }}
+    </div>
+
     <h3>Odpovede</h3>
     <p><em>Vyplň odpovede nižšie. Zaškrtni tú, ktorá je správna. Prázdne riadky sa ignorujú.</em></p>
     {{ a_formset.management_form }}
-    <table border="1" cellpadding="6">
-        <thead><tr><th>Text odpovede</th><th>Správna?</th></tr></thead>
+    
+    <table >
+        <thead>
+            <tr>
+                <th>Text odpovede</th>
+                <th>Správna?</th>
+            </tr>
+        </thead>
         <tbody>
             {% for form in a_formset %}
-            <tr><td>{{ form.text }}</td><td style="text-align:center;">{{ form.is_correct }}</td></tr>
+            <tr>
+                <td>{{ form.text }}</td>
+                <td>{{ form.is_correct }}</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
     <br>
-    <button type="submit">💾 Uložiť otázku a vrátiť sa na test</button>
-    <a href="{% url 'detail_testu' test.id %}">Zrušiť</a>
+    <button type="submit" class="btn-login-submit" (--success);>
+        💾 Uložiť otázku a vrátiť sa na test
+    </button>
+    <a href="{% url 'detail_testu' test.id %}" >Zrušiť</a>
 </form>
-{% endblock %}
+{% endblock%}

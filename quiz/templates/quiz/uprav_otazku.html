@@ -1,4 +1,5 @@
 {% extends 'quiz/base.html' %}
+{% block title %}Upraviť otázku – {{ q_form.instance.text|truncatechars:30 }}{% endblock %}
 {% block content %}
 <h2>Upraviť otázku</h2>
 
@@ -6,16 +7,28 @@
     {% csrf_token %}
     <input type="hidden" name="test_id" value="{{ test_id }}">
     
-    {{ q_form.as_p }}
+    <div class="django-form-styled">
+        {{ q_form.as_p }}
+    </div>
     
     <h3>Odpovede</h3>
     {{ a_formset.management_form }}
-    {% for form in a_formset %}
-        {{ form.as_p }}
-        <hr>
-    {% endfor %}
     
-    <button type="submit">Uložiť zmeny</button>
-    <a href="{% url 'detail_testu' test_id %}">Zrušiť</a>
+    <div>
+        {% for form in a_formset %}
+            <div>
+                {{ form.id }}
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+    
+    <button type="submit">
+        💾 Uložiť zmeny
+    </button>
+    
+    <div>
+        <a href="{% url 'detail_testu' test_id %}">Zrušiť</a>
+    </div>
 </form>
 {% endblock %}

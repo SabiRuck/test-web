@@ -1,13 +1,20 @@
 {% extends 'quiz/base.html' %}
 {% block title %}Nový test{% endblock %}
-{% block content %}
-<h1>Vytvoriť nový test</h1>
-<a href="{% url 'dashboard' %}">← Späť na dashboard</a>
-<hr>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Vytvoriť test a pridať otázky →</button>
-</form>
-{% endblock %}
 
+{% block content %}
+<a href="{% url 'dashboard' %}" class="back-link">← Späť na dashboard</a>
+
+<h1>Vytvoriť nový test</h1>
+<hr>
+
+<div class="django-form-styled">
+    <form method="post">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+        
+        <br>
+        <button type="submit">Vytvoriť test a pridať otázky →</button>
+    </form>
+</div>
+{% endblock %}
